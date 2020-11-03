@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
-
-ln -s  ./zshrc ~/.zshrc
-ln -s ./vimrc ~/.vimrc
+for file in .zshrc .vimrc; do
+  if [ ! -L ~/${file} ]; then
+    ln -s  ./${file} ~/${file}
+  fi
+done
