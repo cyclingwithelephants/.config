@@ -3,6 +3,8 @@ export PATH=$HOME/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PATH='/Users/adamrummer/bin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/usr/local/sbin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
 # Golang vars
 export GOPATH="${HOME}/go"
+export GOOS="darwin"
+export GOARCH="amd64"
 export GOROOT="$(brew --prefix golang)/libexec"
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 test -d "${GOPATH}" || mkdir "${GOPATH}"
@@ -56,10 +58,25 @@ export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
 alias 'docker_del'='~/bin/docker/del_all_proc+images.sh'
 alias ls="ls -GlhF"
 alias ML='. ~/bin/ML_venv_switch'
+alias please='sudo'
+# alias rdp='~/Desktop/Tools/rdp'
+# alias pish='push'
+# alias repos='cd ~/Documents/Git'
+alias g='git'
+alias k='kubectl'
+# alias w='watch'
+# alias reload="exec ${SHELL} -l"
+# alias idGroups="id -a | sed 's|,|\n|g'"
+# alias ll="ls -lA $LS_COLORS"
+# alias watch='watch -n 1'
+alias kwatch='watch -n 1 kubectl'
+alias kx='kubectx'
+alias kn='kubens'
 
+
+alias box='ssh adam@192.168.50.107 -i ~/.ssh/adam@box'
 # Variables -----------------------------------------------------------------------
-homeserver='86.13.244.162'
-
+my_pub_ip="ifconfig en0 | grep 'inet ' | awk '{print $2}'"
 # Nice welcome message -----------------------------------------------------------
 ls
 
@@ -68,21 +85,18 @@ for file in ~/.oh-my-zsh/functions/*; do
 	autoload -Uz $(basename "${file}")
 done
 
+
+export GO111MODULE=on
+export PATH=$PATH:/usr/local/kubebuilder/bin
+alias kc='kubectl'
+
+# for using git with SSH to autoload the agent
+ eval "$(ssh-agent -s)"
+ ssh-add ~/.ssh/github_cyclingwithelephants
+
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/adamrummer/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/adamrummer/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/Users/adamrummer/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/adamrummer/Downloads/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/adamrummer/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/adamrummer/google-cloud-sdk/completion.zsh.inc'; fi
-
-# tabtab source for serverless package
-# uninstall by removing these lines or running `tabtab uninstall serverless`
-[[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
-# tabtab source for sls package
-# uninstall by removing these lines or running `tabtab uninstall sls`
-[[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
-# tabtab source for slss package
-# uninstall by removing these lines or running `tabtab uninstall slss`
-[[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/slss.zsh ]] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/slss.zsh
-
-# Autocomplete for helm CLI ----------------------------------------------------
-source ~/.helm/helm_zsh_completion.sh
+if [ -f '/Users/adamrummer/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/adamrummer/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
