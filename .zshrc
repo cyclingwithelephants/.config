@@ -55,7 +55,6 @@ export RPROMPT=\$vcs_info_msg_0_ # prints current git branch
 export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
 
 # Setting up aliases for personal commands ---------------------------------------
-alias 'docker_del'='~/bin/docker/del_all_proc+images.sh'
 alias ls="ls -GlhF"
 alias ML='. ~/bin/ML_venv_switch'
 alias please='sudo'
@@ -91,8 +90,8 @@ export PATH=$PATH:/usr/local/kubebuilder/bin
 alias kc='kubectl'
 
 # for using git with SSH to autoload the agent
- eval "$(ssh-agent -s)"
- ssh-add ~/.ssh/github_cyclingwithelephants
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/github
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/adamrummer/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/adamrummer/Downloads/google-cloud-sdk/path.zsh.inc'; fi
