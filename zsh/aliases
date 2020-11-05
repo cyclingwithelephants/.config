@@ -10,6 +10,7 @@ alias la="CLICOLOR_FORCE=1 LC_COLLATE=cs_CZ.ISO8859-2 ls -lFA  | awk '{$1=$2=$3=
 alias g='git'
 alias gch='git checkout'
 alias gco='git commit'
+alias gp='git push'
 
 # kube
 alias kc='kubectl'
