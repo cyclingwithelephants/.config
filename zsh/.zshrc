@@ -1,4 +1,4 @@
-. ${ZDOTDIR}/aliases
+source ${ZDOTDIR}/aliases
 
 # GLOBAL VARIABLES -----------------------------------------------------------
 export PATH=$HOME/bin:/usr/bin:/bin:/usr/sbin:/sbin
