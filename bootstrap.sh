@@ -19,7 +19,7 @@ function idempotent_sym_link () {
 }
 
 # zshrc will load all config from ~/.config/zsh/* thanks to ~/.zshenv
-idempotent_sym_link ~/.config/dotfiles/.zshenv ~/.zshenv
+idempotent_sym_link ~/.config/dotfiles/zsh/.zshenv ~/.zshenv
 
 
 idempotent_sym_link ~/.config/dotfiles/.vimrc ~/.vimrc
