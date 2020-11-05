@@ -1,5 +1,24 @@
 
 # formats ls as a vertical list, excluding extra information from `ls -l`
 # `CLICOLOR_FORCE=1` forces ls colour to be displayed through piping.
-alias l=" CLICOLOR_FORCE=1 ls -lF   | awk '{$1=$2=$3=$4=$5=$6=$7=$8=""; if (NR!=1) print substr($0, 9)}'"
-alias la="CLICOLOR_FORCE=1 ls -AlF  | awk '{$1=$2=$3=$4=$5=$6=$7=$8=""; if (NR!=1) print substr($0, 9)}'"
+alias l=" CLICOLOR_FORCE=1 ls -lF   | awk '{$1=$2=$3=$4=$5=$6=$7=$8=""; if (NR!=1) print substr($0, 9)}'" | sort -f
+alias la="CLICOLOR_FORCE=1 ls -AlF  | awk '{$1=$2=$3=$4=$5=$6=$7=$8=""; if (NR!=1) print substr($0, 9)}'" | sort -f
+
+
+
+alias please='sudo'
+
+alias g='git'
+alias gch='git checkout'
+alias gco='git commit'
+
+alias tf='terraform'
+
+# kube
+alias kc='kubectl'
+alias kx='kubectx'
+alias kn='kubens'
+alias kwatch='watch -n 1 kubectl'
+alias k='kubectl'
+
+alias box='ssh adam@192.168.50.107 -i ~/.ssh/adam@box'
