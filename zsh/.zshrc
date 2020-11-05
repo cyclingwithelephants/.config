@@ -1,4 +1,4 @@
-. ./aliases
+. ${ZDOTDIR}/aliases
 
 # GLOBAL VARIABLES -----------------------------------------------------------
 export PATH=$HOME/bin:/usr/bin:/bin:/usr/sbin:/sbin
@@ -63,9 +63,9 @@ my_pub_ip="ifconfig en0 | grep 'inet ' | awk '{print $2}'"
 ls
 
 # Autoloading functions --------------------------------------------------------
-for file in ~/.oh-my-zsh/functions/*; do
-	autoload -Uz $(basename "${file}")
-done
+# for file in ~/.oh-my-zsh/functions/*; do
+# 	autoload -Uz $(basename "${file}")
+# done
 
 
 export GO111MODULE=on
