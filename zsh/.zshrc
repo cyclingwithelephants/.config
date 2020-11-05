@@ -1,3 +1,5 @@
+. ./aliases
+
 # GLOBAL VARIABLES -----------------------------------------------------------
 export PATH=$HOME/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PATH='/Users/adamrummer/bin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/usr/local/sbin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
@@ -54,26 +56,7 @@ export RPROMPT=\$vcs_info_msg_0_ # prints current git branch
 # To get nice colours in my ls funciton ------------------------------------------
 export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
 
-# Setting up aliases for personal commands ---------------------------------------
-alias ls="ls -GlhF"
-alias ML='. ~/bin/ML_venv_switch'
-alias please='sudo'
-# alias rdp='~/Desktop/Tools/rdp'
-# alias pish='push'
-# alias repos='cd ~/Documents/Git'
-alias g='git'
-alias k='kubectl'
-# alias w='watch'
-# alias reload="exec ${SHELL} -l"
-# alias idGroups="id -a | sed 's|,|\n|g'"
-# alias ll="ls -lA $LS_COLORS"
-# alias watch='watch -n 1'
-alias kwatch='watch -n 1 kubectl'
-alias kx='kubectx'
-alias kn='kubens'
 
-
-alias box='ssh adam@192.168.50.107 -i ~/.ssh/adam@box'
 # Variables -----------------------------------------------------------------------
 my_pub_ip="ifconfig en0 | grep 'inet ' | awk '{print $2}'"
 # Nice welcome message -----------------------------------------------------------
@@ -87,7 +70,7 @@ done
 
 export GO111MODULE=on
 export PATH=$PATH:/usr/local/kubebuilder/bin
-alias kc='kubectl'
+
 
 # for using git with SSH to autoload the agent
 eval "$(ssh-agent -s)"
