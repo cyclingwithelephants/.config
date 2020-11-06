@@ -1,4 +1,21 @@
-source ${ZDOTDIR}/aliases
+# We load all oh-my-zsh related things at the top so that it doesn't overwrite anything we change
+
+# Path to your oh-my-zsh installation.
+export ZSH="${HOME}/.config/oh-my-zsh"
+
+ZSH_THEME="robbyrussell"
+HYPHEN_INSENSITIVE="true" # for auto completion, _ and - will be interchangeable
+ENABLE_CORRECTION="true" # enable command auto-correction.
+
+plugins=(
+	zsh-syntax-highlighting
+	zsh-autosuggestions
+	colored-man-pages
+)
+
+source $ZSH/oh-my-zsh.sh
+
+
 
 # GLOBAL VARIABLES -----------------------------------------------------------
 export PATH=$HOME/bin:/usr/bin:/bin:/usr/sbin:/sbin
@@ -13,26 +30,6 @@ test -d "${GOPATH}" || mkdir "${GOPATH}"
 test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
 
 
-
-# Path to your oh-my-zsh installation.
-export ZSH="${HOME}/.config/oh-my-zsh"
-
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="robbyrussell"
-
-HYPHEN_INSENSITIVE="true" # for auto completion, _ and - will be interchangeable
-ENABLE_CORRECTION="true" # enable command auto-correction.
-
-plugins=(
-	zsh-syntax-highlighting
-	zsh-autosuggestions
-	colored-man-pages
-)
-
-source $ZSH/oh-my-zsh.sh
 
 
 # PROMPT ----------------------------------------------------------------------
@@ -82,3 +79,6 @@ if [ -f '/Users/adamrummer/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/adamrummer/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/adamrummer/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
+
+
+source ${ZDOTDIR}/aliases
