@@ -67,7 +67,10 @@ export PATH=$PATH:/usr/local/kubebuilder/bin
 
 # for using git with SSH to autoload the agent
 eval "$(ssh-agent -s)" 1> /dev/null
-ssh-add ~/.ssh/github 1> /dev/null
+# this is super awkward, ssh-add spits out INFO level messages to stderr
+# this could be the cause of bugs down the road, must stay aware
+# TODO: is there some autonomous way to filter out a specific message from stderr?
+ssh-add ~/.ssh/Adams-MBP_github 2> /dev/null
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 
 
