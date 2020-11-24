@@ -49,13 +49,9 @@ zstyle ':vcs_info:git:*' formats 'on branch %b'
 # Right prompt
 export RPROMPT=\$vcs_info_msg_0_ # prints current git branch
 
-
 # To get nice colours in my ls funciton ------------------------------------------
 export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
 
-
-# Variables -----------------------------------------------------------------------
-my_pub_ip="ifconfig en0 | grep 'inet ' | awk '{print $2}'"
 # Nice welcome message -----------------------------------------------------------
 ls
 
@@ -72,13 +68,13 @@ export PATH=$PATH:/usr/local/kubebuilder/bin
 # for using git with SSH to autoload the agent
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/github
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/adamrummer/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/adamrummer/Downloads/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/adamrummer/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/adamrummer/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 
 
 source ${ZDOTDIR}/aliases
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/adam/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/adam/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/adam/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/adam/google-cloud-sdk/completion.zsh.inc'; fi
