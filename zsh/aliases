@@ -21,6 +21,7 @@ alias kwatch='watch -n 1 kubectl'
 alias k='kubectl'
 
 alias box='ssh adam@192.168.50.107 -i ~/.ssh/adam@box'
+alias helios64='ssh adam@192.168.50.75 -i ~/.ssh/adam@helios64'
 
 alias please='sudo'
 
