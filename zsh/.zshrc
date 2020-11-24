@@ -66,8 +66,8 @@ export PATH=$PATH:/usr/local/kubebuilder/bin
 
 
 # for using git with SSH to autoload the agent
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/github
+eval "$(ssh-agent -s)" 1> /dev/null
+ssh-add ~/.ssh/github 1> /dev/null
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 
 
