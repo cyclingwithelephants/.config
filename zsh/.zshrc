@@ -1,19 +1,17 @@
 # We load all oh-my-zsh related things at the top so that it doesn't overwrite anything we change
 
 # Path to your oh-my-zsh installation.
-export ZSH="${HOME}/.config/oh-my-zsh"
+# export ZSH="${HOME}/.config/oh-my-zsh"
 
-ZSH_THEME="robbyrussell"
-HYPHEN_INSENSITIVE="true" # for auto completion, _ and - will be interchangeable
-ENABLE_CORRECTION="true" # enable command auto-correction.
+#ZSH_THEME="robbyrussell"
+#HYPHEN_INSENSITIVE="true" # for auto completion, _ and - will be interchangeable
+# ENABLE_CORRECTION="true" # enable command auto-correction.
 
-plugins=(
-	zsh-syntax-highlighting
-	zsh-autosuggestions
-	colored-man-pages
-)
+#plugins=(
+#	colored-man-pages
+#)
 
-source $ZSH/oh-my-zsh.sh
+# source $ZSH/oh-my-zsh.sh
 
 
 
@@ -30,8 +28,12 @@ test -d "${GOPATH}" || mkdir "${GOPATH}"
 test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
 
 
+export GOPATH=$HOME/golang 
+export GOROOT=/usr/local/opt/go/libexec
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
 
-
+export PULUMI_CONFIG_PASSPHRASE=""
 # PROMPT ----------------------------------------------------------------------
 # Pretty colours
 yellow=$FG[226]
@@ -52,15 +54,6 @@ export RPROMPT=\$vcs_info_msg_0_ # prints current git branch
 # To get nice colours in my ls funciton ------------------------------------------
 export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
 
-# Nice welcome message -----------------------------------------------------------
-ls
-
-# Autoloading functions --------------------------------------------------------
-# for file in ~/.oh-my-zsh/functions/*; do
-# 	autoload -Uz $(basename "${file}")
-# done
-
-
 export GO111MODULE=on
 export PATH=$PATH:/usr/local/kubebuilder/bin
 
@@ -76,8 +69,17 @@ ssh-add ~/.ssh/Adams-MBP_github 2> /dev/null
 
 source ${ZDOTDIR}/aliases
 
+# Nice welcome message - this is done after sourcing custom aliases so that we can use them.-----------------------------------------------------------
+echo "=========================================="
+l
+
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/adam/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/adam/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/adam/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/adam/google-cloud-sdk/completion.zsh.inc'; fi
+
+# this enables the following plugins for zsh (I believe without oh-my-zsh)
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+

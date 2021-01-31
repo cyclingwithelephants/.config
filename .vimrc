@@ -7,7 +7,7 @@ set number
 syntax on
 
 " sets syntax highlighting profile
-colorscheme hue 
+colorscheme slate 
 
 " Automatically install vim-plug if it isn't already.
 " vim-plug github: https://github.com/junegunn/vim-plug
