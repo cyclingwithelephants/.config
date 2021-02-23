@@ -13,11 +13,15 @@
 
 # source $ZSH/oh-my-zsh.sh
 
-
-
+export CLICOLOR=1
+export TERM=xterm-256color
 # GLOBAL VARIABLES -----------------------------------------------------------
 export PATH=$HOME/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PATH='/Users/adamrummer/bin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/usr/local/sbin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
+
+
+export PATH="/Library/TeX/texbin/:$PATH"  
+
 # Golang vars
 export GOPATH="${HOME}/go"
 export GOOS="darwin"
@@ -45,12 +49,14 @@ export PS1="${yellow}[%n@%m${reset}${purple} %~${reset}${yellow}] :${reset}"
 
 # Load git version control information
 autoload -Uz vcs_info
-precmd() { vcs_info }
-# Format the vcs_info_msg_0_ variable
-zstyle ':vcs_info:git:*' formats 'on branch %b'
-# Right prompt
-export RPROMPT=\$vcs_info_msg_0_ # prints current git branch
 
+# Format the vcs_info_msg_0_ variable
+zstyle ':vcs_info:*' enable git svn
+#zstyle ':vcs_info:git:*' formats 'on branch %b'
+precmd() { vcs_info }
+# Right prompt
+setopt prompt_subst
+export RPROMPT='${vcs_info_msg_0_}' # prints current git branch
 # To get nice colours in my ls funciton ------------------------------------------
 export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
 
