@@ -39,23 +39,20 @@ export PATH=$PATH:$GOROOT/bin
 
 export PULUMI_CONFIG_PASSPHRASE=""
 # PROMPT ----------------------------------------------------------------------
-# Pretty colours
-yellow=$FG[226]
-purple=$FG[005]
-reset=%{$reset_color%}
+# I _think_ this turns on the colours for zsh
+autoload -U colors 
+# LPROMPT
+export PROMPT="%{$fg[yellow]%}[%n@%m%{$reset_color%}%{$fg[magenta]%} %~%{$reset_color%}%{$fg[yellow]%}] :%{$reset_color%}"
 
-# Left prompt
-export PS1="${yellow}[%n@%m${reset}${purple} %~${reset}${yellow}] :${reset}"
-
+# RPROMPT
 # Load git version control information
 autoload -Uz vcs_info
-
 # Format the vcs_info_msg_0_ variable
-zstyle ':vcs_info:*' enable git svn
-#zstyle ':vcs_info:git:*' formats 'on branch %b'
+zstyle ':vcs_info:*' enable git
 precmd() { vcs_info }
+
 # Right prompt
-setopt prompt_subst
+#setopt prompt_subst
 export RPROMPT='${vcs_info_msg_0_}' # prints current git branch
 # To get nice colours in my ls funciton ------------------------------------------
 export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
