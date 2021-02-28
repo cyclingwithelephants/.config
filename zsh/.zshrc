@@ -10,56 +10,32 @@
 #plugins=(
 #	colored-man-pages
 #)
+source ${ZDOTDIR}/aliases
 
-# source $ZSH/oh-my-zsh.sh
-
-export CLICOLOR=1
-export TERM=xterm-256color
-# GLOBAL VARIABLES -----------------------------------------------------------
-export PATH=$HOME/bin:/usr/bin:/bin:/usr/sbin:/sbin
-export PATH='/Users/adamrummer/bin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/usr/local/sbin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
+# This 
+autoload -Uz compinit
+compinit
 
 
-export PATH="/Library/TeX/texbin/:$PATH"  
-
-# Golang vars
-export GOPATH="${HOME}/go"
-export GOOS="darwin"
-export GOARCH="amd64"
-export GOROOT="$(brew --prefix golang)/libexec"
-export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
-test -d "${GOPATH}" || mkdir "${GOPATH}"
-test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
-
-
-export GOPATH=$HOME/golang 
-export GOROOT=/usr/local/opt/go/libexec
-export PATH=$PATH:$GOPATH/bin
-export PATH=$PATH:$GOROOT/bin
-
-export PULUMI_CONFIG_PASSPHRASE=""
 # PROMPT ----------------------------------------------------------------------
-# I _think_ this turns on the colours for zsh
 autoload -U colors 
+colors
 # LPROMPT
-export PROMPT="%{$fg[yellow]%}[%n@%m%{$reset_color%}%{$fg[magenta]%} %~%{$reset_color%}%{$fg[yellow]%}] :%{$reset_color%}"
+export PS1="%{$fg[yellow]%}[%n@%m%{$reset_color%}%{$fg[magenta]%} %~%{$reset_color%}%{$fg[yellow]%}]: %{$reset_color%}"
 
 # RPROMPT
 # Load git version control information
 autoload -Uz vcs_info
 # Format the vcs_info_msg_0_ variable
-zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git*' formats "%b" 
 precmd() { vcs_info }
 
 # Right prompt
 #setopt prompt_subst
-export RPROMPT='${vcs_info_msg_0_}' # prints current git branch
-# To get nice colours in my ls funciton ------------------------------------------
+# export RPROMPT='${vcs_info_msg_0_}' # prints current git branch
+
+# To get nice colours in my ls funciton
 export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
-
-export GO111MODULE=on
-export PATH=$PATH:/usr/local/kubebuilder/bin
-
 
 # for using git with SSH to autoload the agent
 eval "$(ssh-agent -s)" 1> /dev/null
@@ -67,10 +43,11 @@ eval "$(ssh-agent -s)" 1> /dev/null
 # this could be the cause of bugs down the road, must stay aware
 # TODO: is there some autonomous way to filter out a specific message from stderr?
 ssh-add ~/.ssh/Adams-MBP_github 2> /dev/null
+
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 
 
-source ${ZDOTDIR}/aliases
+
 
 # Nice welcome message - this is done after sourcing custom aliases so that we can use them.-----------------------------------------------------------
 echo "=========================================="
