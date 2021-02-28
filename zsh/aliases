@@ -4,14 +4,17 @@
 # CLICOLOR_FORCE=1 forces ls colour to be displayed even through piping.
 # LC_COLLATE=cs_CZ.ISO8859-2 is a locale that is used to sort the alphabet in a case-insensitive way (i.e. aAbBcC rather than abcABC).
 # it does sort dotfiles after Z but we're getting there.
+# similar to exa -1
 alias l='CLICOLOR_FORCE=1 LC_COLLATE=cs_CZ.ISO8859-2 ls -lF  | awk "{\$1=\$2=\$3=\$4=\$5=\$6=\$7=\$8=\"\"; if (NR!=1) print substr(\$0, 9)}"'
 alias la='CLICOLOR_FORCE=1 LC_COLLATE=cs_CZ.ISO8859-2 ls -lFA  | awk "{\$1=\$2=\$3=\$4=\$5=\$6=\$7=\$8=\"\"; if (NR!=1) print substr(\$0, 9)}"'
 
 # git
 alias g='git'
+alias ga='git add'
 alias gch='git checkout'
-alias gco='git commit'
+alias gc='git commit'
 alias gp='git push'
+alias gs='git status'
 
 # kube
 alias kc='kubectl'
@@ -19,9 +22,11 @@ alias kx='kubectx'
 alias kwatch='watch -n 1 kubectl'
 alias k='kubectl'
 
+# sshs
 alias box='ssh adam@192.168.50.29 -i ~/.ssh/adam@box'
 alias helios64='ssh adam@192.168.50.75 -i ~/.ssh/adam@helios64'
 
+# When I need to cheer myself up
 alias please='sudo'
 
 alias tf='terraform'
