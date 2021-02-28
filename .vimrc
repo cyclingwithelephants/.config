@@ -6,9 +6,12 @@ set number
 " Enables syntax highlighting
 syntax on
 
-" sets syntax highlighting profile
+" Enable true colors if available
+set termguicolors
 colorscheme slate 
-
+" Enable italics, Make sure this is immediately after colorscheme
+" https://stackoverflow.com/questions/3494435/vimrc-make-comments-italic
+highlight Comment cterm=italic gui=italic
 " Automatically install vim-plug if it isn't already.
 " vim-plug github: https://github.com/junegunn/vim-plug
 if empty(glob('~/.vim/autoload/plug.vim'))
