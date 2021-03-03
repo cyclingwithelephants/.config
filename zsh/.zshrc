@@ -12,7 +12,7 @@
 #)
 source ${ZDOTDIR}/aliases
 
-# This 
+# This is for zsh completion
 autoload -Uz compinit
 compinit
 
@@ -46,8 +46,13 @@ ssh-add ~/.ssh/Adams-MBP_github 2> /dev/null
 
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 
-
-
+### AWS creds
+file='~/.aws/credentials'
+if test -f $file; then
+	aws_profile='default'
+	export AWS_ACCESS_KEY_ID=$(aws configure get default.aws_access_key_id --profile $aws_profile)
+	export AWS_SECRET_KEY=$(aws configure get default.aws_secret_access_key --profile $aws_profile)
+fi
 
 # Nice welcome message - this is done after sourcing custom aliases so that we can use them.-----------------------------------------------------------
 echo "=========================================="
