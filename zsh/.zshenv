@@ -1,9 +1,9 @@
-ZDOTDIR="${HOME}/.config/dotfiles/zsh"
+ZDOTDIR="${HOME}/.config/zsh"
 
 # TERMINAL
 export CLICOLOR=1
 export TERM=alacritty
-export XDG_CONFIG_HOME="$HOME/.config/dotfiles"
+export XDG_CONFIG_HOME="${HOME}/.config/"
 export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
 
 # PATH
@@ -16,8 +16,3 @@ export GOARCH="amd64"
 export GOROOT=/usr/local/opt/go/libexec
 export GO111MODULE=on
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
-# test -d "${GOPATH}" || mkdir "${GOPATH}"
-# test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
-
-# PULUMI
-export PULUMI_CONFIG_PASSPHRASE=""
