@@ -1,0 +1,12 @@
+[user]
+	email = 31801759+cyclingwithelephants@users.noreply.github.com
+	name = Adam Rummer
+[alias]
+    cleanup = "!git branch --merged | grep  -v '\\*\\|main\\|master' | xargs -n 1 git branch -d"
+[url "git@github.com:"]
+	insteadOf = https://github.com
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
