@@ -22,11 +22,8 @@ alias kx='kubectx'
 alias kwatch='watch -n 1 kubectl'
 alias k='kubectl'
 
-# sshs
-alias box='ssh adam@192.168.50.29 -i ~/.ssh/adam@box'
-alias helios64='ssh adam@192.168.50.75 -i ~/.ssh/adam@helios64'
 
-# When I need to cheer myself up
+# for when I need to cheer myself up
 alias please='sudo'
 
 alias tf='terraform'
