@@ -50,6 +50,4 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Machine specific config
 file="~/.zshrc"
-if [[ test -f "${file}" ]]; then
-    source "${file}"
-fi
+test -f "${file}" && source "${file}"
