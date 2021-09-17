@@ -10,3 +10,6 @@
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+
+[url "git@github.hpe.com:"]
+        insteadOf = https://github.hpe.com/
