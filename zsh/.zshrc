@@ -45,3 +45,11 @@ if [ -f '/Users/adam/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/adam
 # These were installed using brew
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+
+
+# Machine specific config
+file="~/.zshrc"
+if [[ test -f "${file}" ]]; then
+    source "${file}"
+fi
