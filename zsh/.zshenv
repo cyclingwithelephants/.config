@@ -2,7 +2,7 @@ ZDOTDIR="${HOME}/.config/zsh"
 
 # TERMINAL
 export CLICOLOR=1
-export TERM=alacritty
+#export TERM=alacritty
 # Not strictly used in MacOS but some apps still do observe this
 export XDG_CONFIG_HOME="${HOME}/.config/"
 export XDG_CACHE_HOME="${HOME}/.cache/"
