@@ -49,5 +49,5 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 
 # Machine specific config
-file="~/.zshrc"
+file="${HOME}/.zshrc"
 test -f "${file}" && source "${file}"
