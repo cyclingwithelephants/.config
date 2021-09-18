@@ -13,3 +13,5 @@
 
 [url "git@github.hpe.com:"]
         insteadOf = https://github.hpe.com/
+[pull]
+	rebase = true
