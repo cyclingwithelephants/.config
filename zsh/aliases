@@ -18,11 +18,10 @@ alias gp='git push'
 alias gs='git status'
 
 # kube
-alias kc='kubectl'
+alias k='kubectl'
+alias kg='kubectl get'
 alias kx='kubectx'
 alias kwatch='watch -n 1 kubectl'
-alias k='kubectl'
-
 
 # for when I need to cheer myself up
 alias please='sudo'
