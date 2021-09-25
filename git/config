@@ -3,6 +3,17 @@
 	name = Adam Rummer
 [alias]
     cleanup = "!git branch --merged | grep  -v '\\*\\|main\\|master' | xargs -n 1 git branch -d"
+	s = status
+	d = diff
+	co = checkout
+	br = branch
+	last = log -1 HEAD
+	ca = commit --amend --no-edit
+	pr = pull --rebase
+	lo = log --oneline -n 10
+	a = add .
+	cm = commit -m
+	rh = reset --hard
 [url "git@github.com:"]
 	insteadOf = https://github.com
 [filter "lfs"]
