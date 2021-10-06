@@ -11,7 +11,7 @@
 	ca = commit --amend --no-edit
 	pr = pull --rebase
 	lo = log --oneline -n 10
-	a = add .
+	a = add
 	cm = commit -m
 	rh = reset --hard
 [url "git@github.com:"]
@@ -21,8 +21,8 @@
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
-
-[url "git@github.hpe.com:"]
-        insteadOf = https://github.hpe.com/
 [pull]
 	rebase = true
+
+[includeIf "gitdir:~/dev-env/"]
+    path = ~/dev-env/.gitconfig
