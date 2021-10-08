@@ -24,3 +24,5 @@ alias please='sudo'
 alias tf='terraform'
 
 alias vim="nvim"
+
+alias docker="podman"
