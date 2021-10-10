@@ -43,9 +43,17 @@ if [ -f '/Users/adam/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/adam
 
 # Enables the following plugins for zsh (I believe without oh-my-zsh)
 # These were installed using brew
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
+#
+os=$(uname)
+if [[ "$os" == "Darwin" ]]; then
+	source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+	source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+	
+else
+	# os == Linux
+	source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 
 
 # Machine specific config
