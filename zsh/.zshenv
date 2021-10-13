@@ -12,7 +12,7 @@ export XDG_STATE_HOME="${HOME}/.local/state"
 export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
 
 # PATH
-export PATH="${HOME}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="${HOME}/bin:/usr/local/bin:/usr/local/sbin/usr/bin:/usr/sbin:/bin:/sbin"
 
 # GOLANG
 export GOPATH="${HOME}/code/golang"
@@ -21,3 +21,7 @@ export GOARCH="amd64"
 export GOROOT=/usr/local/opt/go/libexec
 export GO111MODULE=on
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+
+# Java
+# This allows java based apps to show (e.g. goland)
+export _JAVA_AWT_WM_NONREPARENTING=1
