@@ -10,7 +10,6 @@ compinit
 # PROMPT ----------------------------------------------------------------------
 autoload -U colors 
 colors
-# LPROMPT
 export PS1="%{$fg[yellow]%}[%n@%m%{$reset_color%}%{$fg[magenta]%} %~%{$reset_color%}%{$fg[yellow]%}]: %{$reset_color%}"
 
 # To get nice colours in my ls funciton
@@ -32,18 +31,15 @@ if test -f '~/.aws/credentials'; then
 	export AWS_SECRET_KEY=$(aws configure get default.aws_secret_access_key --profile $aws_profile)
 fi
 
-# Nice welcome message
-echo "=========================================="
-l
-
 # Updates PATH for the Google Cloud SDK.
-if [ -f '/Users/adam/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/adam/google-cloud-sdk/path.zsh.inc'; fi
-# Enables shell command completion for gcloud.
-if [ -f '/Users/adam/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/adam/google-cloud-sdk/completion.zsh.inc'; fi
+file='/Users/adam/google-cloud-sdk/path.zsh.inc'
+test -f $file && source $file
 
-# Enables the following plugins for zsh (I believe without oh-my-zsh)
-# These were installed using brew
-#
+# Enables shell command completion for gcloud.
+file='/Users/adam/google-cloud-sdk/completion.zsh.inc'
+test -f $file && source $file
+
+# Enables the following plugins for zsh (without oh-my-zsh)
 os=$(uname)
 if [[ "$os" == "Darwin" ]]; then
 	source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -58,4 +54,4 @@ fi
 
 # Machine specific config
 file="${HOME}/.zshrc"
-test -f "${file}" && source "${file}"
+test -f ${file} && source ${file}
