@@ -20,7 +20,7 @@ eval "$(ssh-agent -s)" 1> /dev/null
 # this is super awkward, ssh-add spits out INFO level messages to stderr
 # this could be the cause of bugs down the road, must stay aware
 # TODO: is there some autonomous way to filter out a specific message from stderr?
-ssh-add ~/.ssh/Adams-MBP_github 2> /dev/null
+ssh-add ~/.ssh/personal/Adams-MBP_github 2> /dev/null
 
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 
