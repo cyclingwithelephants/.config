@@ -25,4 +25,4 @@ alias tf='terraform'
 
 alias vim="nvim"
 
-alias docker="podman"
+#alias docker="podman"

@@ -20,7 +20,7 @@ export GOOS="darwin"
 export GOARCH="amd64"
 export GOROOT=/usr/local/opt/go/libexec
 export GO111MODULE=on
-export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin:$HOME/bin"
 
 # Java
 # This allows java based apps to show (e.g. goland)
