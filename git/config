@@ -14,8 +14,8 @@
 	a = add
 	cm = commit -m
 	rh = reset --hard
-[url "git@github.com:"]
-	insteadOf = https://github.com
+#[url "git@github.com:"]
+#	insteadOf = https://github.com
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
@@ -23,6 +23,9 @@
 	clean = git-lfs clean -- %f
 [pull]
 	rebase = true
+
+[push]
+  autoSetupRemote = true
 
 [includeIf "gitdir:~/dev-env/"]
     path = ~/dev-env/.gitconfig
