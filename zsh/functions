@@ -1,0 +1,6 @@
+source_if_exists() {
+    path=$1
+    if test -f "${path}"; then
+        source "${path}"
+    fi
+}
