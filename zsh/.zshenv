@@ -25,3 +25,8 @@ export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin:$HOME/bin"
 # Java
 # This allows java based apps to show (e.g. goland)
 export _JAVA_AWT_WM_NONREPARENTING=1
+
+# Save command history
+export HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
+export HISTSIZE=2000
+export SAVEHIST=1000
