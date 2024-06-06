@@ -29,3 +29,12 @@
 
 # rclone stores credentials in configuration
 rclone
+
+zed/embeddings/*
+zed/.tmp*
+
+dim
+qBittorrent
+mgba
+github-copilot
+
