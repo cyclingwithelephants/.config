@@ -15,7 +15,6 @@ SYSTEM_ZSHENV=/etc/zshenv
 sudo ln -sf $HOME/.config/zsh/.zshenv $SYSTEM_ZSHENV
 chmod +r $SYSTEM_ZSHENV
 
-sudo chsh -s $(which zsh) adam
 
 # Yabai - only run on personal machine
 # https://github.com/koekeishiya/yabai/wiki/Installing-yabai-(latest-release)
@@ -29,6 +28,8 @@ fi
 
 
 # Apple specific configuration
+
+sudo scutil --set HostName garlic
 
 # Make key repeat fast
 # https://apple.stackexchange.com/questions/10467/how-to-increase-keyboard-key-repeat-rate-on-os-x?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
