@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 tmp_dir=/tmp/install_scripts/tailscale
 tailscale_pkg="${tmp_dir}/install.pkg"
