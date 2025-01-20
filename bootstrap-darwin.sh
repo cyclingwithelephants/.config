@@ -31,6 +31,9 @@ sudo scutil --set HostName      "${hostname}"
 sudo scutil --set LocalHostName "${hostname}"
 sudo scutil --set ComputerName  "${hostname}"
 
+# this stops the "last login" message in the terminal, slightly increasing its speed
+touch ~/.hushlogin
+
 
 ## Yabai - only run on personal machine
 ## https://github.com/koekeishiya/yabai/wiki/Installing-yabai-(latest-release)
