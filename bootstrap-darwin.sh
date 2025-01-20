@@ -2,11 +2,13 @@
 
 set -eou pipefail
 
+cd $(dirname $(readlink -f $0))
+source zsh/.zshenv
+
 # add self to sudoers, we do this first to prevent needing to write password multiple times
 echo "$(whoami) ALL=(ALL) NOPASSWD: ALL" | sudo EDITOR='tee' visudo -f /private/etc/sudoers.d/adam
 
 # install applications using brew, brew cask and Mac App store
-BREWFILE="${HOME}/.config/brewfile/Brewfile"
 if [[ "$(which brew)" == "brew not found" ]]; then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
