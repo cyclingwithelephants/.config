@@ -13,9 +13,9 @@ if [[ "$(which brew)" == "brew not found" ]]; then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
-brew bundle install --file ${BREWFILE}
+brew bundle install --file ${HOMEBREW_BREWFILE}
 # clean up applications not installed using the brewfile
-brew bundle --force cleanup --file ${BREWFILE}
+brew bundle --force cleanup --file ${HOMEBREW_BREWFILE}
 
 # zshrc will load all config from ~/.config/zsh/* thanks to ~/.zshenv specifying ZDOTDIR
 SYSTEM_ZSHENV=/etc/zshenv
@@ -27,20 +27,14 @@ chmod +r $SYSTEM_ZSHENV
 
 # https://www.autodesk.com/support/technical/article/caas/sfdcarticles/sfdcarticles/Setting-the-Mac-hostname-or-computer-name-from-the-terminal.html
 hostname=shallot
-sudo scutil --set HostName      "${hostname}"
+sudo scutil --set HostName "${hostname}"
 sudo scutil --set LocalHostName "${hostname}"
-sudo scutil --set ComputerName  "${hostname}"
+sudo scutil --set ComputerName "${hostname}"
 
 # this stops the "last login" message in the terminal, slightly increasing its speed
 touch ~/.hushlogin
 
-
-## Yabai - only run on personal machine
-## https://github.com/koekeishiya/yabai/wiki/Installing-yabai-(latest-release)
-#if [[ "$(which yabai)" != ""]]; then
-#  echo "$(whoami) ALL = (root) NOPASSWD: $(which yabai) --load-sa" | sudo EDITOR='tee' visudo -f /private/etc/sudoers.d/yabai
-#  sudo yabai --install-sa
-#  sudo yabai --load-sa
-#  brew services start yabai
-#  brew services start skhd
-#fi
+# install packages that are otherwise awkward to install using a Brewfile
+for script in ./install_scripts/*; do
+	bash "${script}"
+done

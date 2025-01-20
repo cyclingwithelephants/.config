@@ -3,61 +3,61 @@
 
 # Function to handle brew install and update the Brewfile
 brew_install_with_brewfile() {
-  IS_CASK=0
-  FORMULA=""
+	IS_CASK=0
+	FORMULA=""
 
-  # Parse arguments to handle "--cask" regardless of position
-  for arg in "$@"; do
-    if [[ "$arg" == "--cask" ]]; then
-      IS_CASK=1
-    else
-      FORMULA="$arg"
-    fi
-  done
+	# Parse arguments to handle "--cask" regardless of position
+	for arg in "$@"; do
+		if [[ "$arg" == "--cask" ]]; then
+			IS_CASK=1
+		else
+			FORMULA="$arg"
+		fi
+	done
 
-  if [[ -z "$FORMULA" ]]; then
-    echo "Usage: brew install [--cask] <formula|cask>"
-    return 1
-  fi
+	if [[ -z "$FORMULA" ]]; then
+		echo "Usage: brew install [--cask] <formula|cask>"
+		return 1
+	fi
 
-  # Ensure the Brewfile exists
-  if [[ ! -f "$HOMEBREW_BREWFILE" ]]; then
-    mkdir -p "$(dirname "$HOMEBREW_BREWFILE")"
-    touch "$HOMEBREW_BREWFILE"
-  fi
+	# Ensure the Brewfile exists
+	if [[ ! -f "$HOMEBREW_BREWFILE" ]]; then
+		mkdir -p "$(dirname "$HOMEBREW_BREWFILE")"
+		touch "$HOMEBREW_BREWFILE"
+	fi
 
-  # Ensure the formula gets installed as either a formula or cask correctly
-  if [[ $IS_CASK -eq 1 ]]; then
-    # Install as cask
-    if command brew install --cask "$FORMULA"; then
-      add_to_brewfile "$FORMULA" "cask"
-    else
-      echo "Failed to install \"$FORMULA\"."
-      return 1
-    fi
-  else
-    # Install as formula
-    if command brew install "$FORMULA"; then
-      add_to_brewfile "$FORMULA" "brew"
-    else
-      echo "Failed to install \"$FORMULA\"."
-      return 1
-    fi
-  fi
+	# Ensure the formula gets installed as either a formula or cask correctly
+	if [[ $IS_CASK -eq 1 ]]; then
+		# Install as cask
+		if command brew install --cask "$FORMULA"; then
+			add_to_brewfile "$FORMULA" "cask"
+		else
+			echo "Failed to install \"$FORMULA\"."
+			return 1
+		fi
+	else
+		# Install as formula
+		if command brew install "$FORMULA"; then
+			add_to_brewfile "$FORMULA" "brew"
+		else
+			echo "Failed to install \"$FORMULA\"."
+			return 1
+		fi
+	fi
 }
 
 # Helper function to add entries to the Brewfile
 add_to_brewfile() {
-  ENTRY_TYPE="$2"
-  FORMULA="$1"
-  ENTRY="$ENTRY_TYPE \"$FORMULA\""
+	ENTRY_TYPE="$2"
+	FORMULA="$1"
+	ENTRY="$ENTRY_TYPE \"$FORMULA\""
 
-  # Check if the entry already exists
-  if grep -qE "^$ENTRY$" "$HOMEBREW_BREWFILE"; then
-    echo "$ENTRY is already in the Brewfile."
-  else
-    TMPFILE=$(mktemp)
-    awk -v entry="$ENTRY" -v type="$ENTRY_TYPE" '
+	# Check if the entry already exists
+	if grep -qE "^$ENTRY$" "$HOMEBREW_BREWFILE"; then
+		echo "$ENTRY is already in the Brewfile."
+	else
+		TMPFILE=$(mktemp)
+		awk -v entry="$ENTRY" -v type="$ENTRY_TYPE" '
       BEGIN { placed = 0 }
       /^brew "/ && type == "brew" {
         if (!placed && $0 > entry) {
@@ -75,59 +75,59 @@ add_to_brewfile() {
       END {
         if (!placed) print entry
       }
-    ' "$HOMEBREW_BREWFILE" > "$TMPFILE"
-    mv "$TMPFILE" "$HOMEBREW_BREWFILE"
-    echo "Added \"$FORMULA\" to the Brewfile as $ENTRY."
-  fi
+    ' "$HOMEBREW_BREWFILE" >"$TMPFILE"
+		mv "$TMPFILE" "$HOMEBREW_BREWFILE"
+		echo "Added \"$FORMULA\" to the Brewfile as $ENTRY."
+	fi
 }
 
 # Function to handle brew uninstall and update the Brewfile
 brew_uninstall_with_brewfile() {
-  IS_CASK=0
-  FORMULA=""
+	IS_CASK=0
+	FORMULA=""
 
-  # Parse arguments to handle "--cask" regardless of position
-  for arg in "$@"; do
-    if [[ "$arg" == "--cask" ]]; then
-      IS_CASK=1
-    else
-      FORMULA="$arg"
-    fi
-  done
+	# Parse arguments to handle "--cask" regardless of position
+	for arg in "$@"; do
+		if [[ "$arg" == "--cask" ]]; then
+			IS_CASK=1
+		else
+			FORMULA="$arg"
+		fi
+	done
 
-  if [[ -z "$FORMULA" ]]; then
-    echo "Usage: brew uninstall [--cask] <formula|cask>"
-    return 1
-  fi
+	if [[ -z "$FORMULA" ]]; then
+		echo "Usage: brew uninstall [--cask] <formula|cask>"
+		return 1
+	fi
 
-  # Ensure the Brewfile exists
-  if [[ ! -f "$HOMEBREW_BREWFILE" ]]; then
-    echo "No Brewfile found at $HOMEBREW_BREWFILE."
-    return 1
-  fi
+	# Ensure the Brewfile exists
+	if [[ ! -f "$HOMEBREW_BREWFILE" ]]; then
+		echo "No Brewfile found at $HOMEBREW_BREWFILE."
+		return 1
+	fi
 
-  # Uninstall the formula or cask (pass --cask only if required)
-  if [[ $IS_CASK -eq 1 ]]; then
-    if command brew uninstall --cask "$FORMULA"; then
-      ENTRY="cask \"$FORMULA\""
-    else
-      echo "Failed to uninstall \"$FORMULA\"."
-      return 1
-    fi
-  else
-    if command brew uninstall "$FORMULA"; then
-      ENTRY="brew \"$FORMULA\""
-    else
-      echo "Failed to uninstall \"$FORMULA\"."
-      return 1
-    fi
-  fi
+	# Uninstall the formula or cask (pass --cask only if required)
+	if [[ $IS_CASK -eq 1 ]]; then
+		if command brew uninstall --cask "$FORMULA"; then
+			ENTRY="cask \"$FORMULA\""
+		else
+			echo "Failed to uninstall \"$FORMULA\"."
+			return 1
+		fi
+	else
+		if command brew uninstall "$FORMULA"; then
+			ENTRY="brew \"$FORMULA\""
+		else
+			echo "Failed to uninstall \"$FORMULA\"."
+			return 1
+		fi
+	fi
 
-  # Check if the entry exists in the Brewfile and remove it
-  if grep -qE "^$ENTRY$" "$HOMEBREW_BREWFILE"; then
-    sed -i.bak "/^$ENTRY$/d" "$HOMEBREW_BREWFILE" && rm -f "$HOMEBREW_BREWFILE.bak"
-    echo "Removed \"$FORMULA\" from the Brewfile."
-  else
-    echo "\"$FORMULA\" was not found in the Brewfile."
-  fi
+	# Check if the entry exists in the Brewfile and remove it
+	if grep -qE "^$ENTRY$" "$HOMEBREW_BREWFILE"; then
+		sed -i.bak "/^$ENTRY$/d" "$HOMEBREW_BREWFILE" && rm -f "$HOMEBREW_BREWFILE.bak"
+		echo "Removed \"$FORMULA\" from the Brewfile."
+	else
+		echo "\"$FORMULA\" was not found in the Brewfile."
+	fi
 }

@@ -5,7 +5,7 @@ export HISTSIZE=20000
 export SAVEHIST=1000
 export CLICOLOR=1
 export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
-export PATH="/opt/homebrew/bin:${HOME}/bin:/usr/local/bin:/usr/local/sbin/usr/bin:/usr/sbin:/bin:/sbin"
+export PATH="/opt/homebrew/bin:${HOME}/bin:${PATH}"
 
 # not strictly used in MacOS but some apps still do observe this
 export XDG_CONFIG_HOME="${HOME}/.config"
@@ -32,5 +32,6 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 # prevents less from creating the .lesshst file in $HOME
 export LESSHISTFILE="${XDG_STATE_HOME}/less/history"
 
-# enabled vim to follow the XDG spec, storing config in $XDG_CONFIG_HOME/vim/vimrc
-export VIMINIT='let $MYVIMRC="$XDG_CONFIG_HOME/vim/vimrc" | source $MYVIMRC'
+# seems to be broken
+# # enabled vim to follow the XDG spec, storing config in $XDG_CONFIG_HOME/vim/vimrc
+# export VIMINIT='let $MYVIMRC="$XDG_CONFIG_HOME/vim/vimrc" | source $MYVIMRC'
