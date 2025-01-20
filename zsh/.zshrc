@@ -40,9 +40,6 @@ source_if_exists '/Users/adam/google-cloud-sdk/completion.zsh.inc'
 # macos ARM64
 source_if_exists /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source_if_exists /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# Linux
-source_if_exists /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source_if_exists /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Machine specific config
 source_if_exists "${HOME}/.zshrc"
