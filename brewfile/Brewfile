@@ -7,6 +7,7 @@ tap "jakehilborn/jakehilborn"
 tap "pulumi/tap"
 tap "versent/taps"
 
+brew "bat"
 brew "btop"
 brew "coreutils"
 brew "delve"

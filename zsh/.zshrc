@@ -1,11 +1,11 @@
 
 # Source custom functions
-for func in ${ZDOTDIR}/functions/*.zsh; do
+for func in ${ZDOTDIR}/functions/*; do
   source "$func"
 done
 
 # Source custom aliases
-for alias_file in ${ZDOTDIR}/aliases/*.zsh; do
+for alias_file in ${ZDOTDIR}/aliases/*; do
   source "$alias_file"
 done
 

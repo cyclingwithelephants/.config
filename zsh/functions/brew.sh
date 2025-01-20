@@ -21,9 +21,9 @@ brew_install_with_brewfile() {
   fi
 
   # Ensure the Brewfile exists
-  if [[ ! -f "$BREWFILE" ]]; then
-    mkdir -p "$(dirname "$BREWFILE")"
-    touch "$BREWFILE"
+  if [[ ! -f "$HOMEBREW_BREWFILE" ]]; then
+    mkdir -p "$(dirname "$HOMEBREW_BREWFILE")"
+    touch "$HOMEBREW_BREWFILE"
   fi
 
   # Ensure the formula gets installed as either a formula or cask correctly
@@ -53,7 +53,7 @@ add_to_brewfile() {
   ENTRY="$ENTRY_TYPE \"$FORMULA\""
 
   # Check if the entry already exists
-  if grep -qE "^$ENTRY$" "$BREWFILE"; then
+  if grep -qE "^$ENTRY$" "$HOMEBREW_BREWFILE"; then
     echo "$ENTRY is already in the Brewfile."
   else
     TMPFILE=$(mktemp)
@@ -75,8 +75,8 @@ add_to_brewfile() {
       END {
         if (!placed) print entry
       }
-    ' "$BREWFILE" > "$TMPFILE"
-    mv "$TMPFILE" "$BREWFILE"
+    ' "$HOMEBREW_BREWFILE" > "$TMPFILE"
+    mv "$TMPFILE" "$HOMEBREW_BREWFILE"
     echo "Added \"$FORMULA\" to the Brewfile as $ENTRY."
   fi
 }
@@ -101,8 +101,8 @@ brew_uninstall_with_brewfile() {
   fi
 
   # Ensure the Brewfile exists
-  if [[ ! -f "$BREWFILE" ]]; then
-    echo "No Brewfile found at $BREWFILE."
+  if [[ ! -f "$HOMEBREW_BREWFILE" ]]; then
+    echo "No Brewfile found at $HOMEBREW_BREWFILE."
     return 1
   fi
 
@@ -124,8 +124,8 @@ brew_uninstall_with_brewfile() {
   fi
 
   # Check if the entry exists in the Brewfile and remove it
-  if grep -qE "^$ENTRY$" "$BREWFILE"; then
-    sed -i.bak "/^$ENTRY$/d" "$BREWFILE" && rm -f "$BREWFILE.bak"
+  if grep -qE "^$ENTRY$" "$HOMEBREW_BREWFILE"; then
+    sed -i.bak "/^$ENTRY$/d" "$HOMEBREW_BREWFILE" && rm -f "$HOMEBREW_BREWFILE.bak"
     echo "Removed \"$FORMULA\" from the Brewfile."
   else
     echo "\"$FORMULA\" was not found in the Brewfile."
