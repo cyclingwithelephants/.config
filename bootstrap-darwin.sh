@@ -7,6 +7,10 @@ echo "$(whoami) ALL=(ALL) NOPASSWD: ALL" | sudo EDITOR='tee' visudo -f /private/
 
 # install applications using brew, brew cask and Mac App store
 BREWFILE="${HOME}/.config/brewfile/Brewfile"
+if [[ "$(which brew)" == "brew not found" ]]; then
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+eval "$(/opt/homebrew/bin/brew shellenv)"
 brew bundle install --file ${BREWFILE}
 # clean up applications not installed using the brewfile
 brew bundle --force cleanup --file ${BREWFILE}
@@ -19,12 +23,12 @@ chmod +r $SYSTEM_ZSHENV
 ##
 ## Apple specific configuration
 
-sudo scutil --set HostName garlic
+# https://www.autodesk.com/support/technical/article/caas/sfdcarticles/sfdcarticles/Setting-the-Mac-hostname-or-computer-name-from-the-terminal.html
+hostname=shallot
+sudo scutil --set HostName      "${hostname}"
+sudo scutil --set LocalHostName "${hostname}"
+sudo scutil --set ComputerName  "${hostname}"
 
-# Make key repeat fast
-# https://apple.stackexchange.com/questions/10467/how-to-increase-keyboard-key-repeat-rate-on-os-x?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
-defaults write -g InitialKeyRepeat -int 15 # normal minimum is 15 (225 ms)
-defaults write -g KeyRepeat -int 2         # normal minimum is 2  (30  ms)
 
 ## Yabai - only run on personal machine
 ## https://github.com/koekeishiya/yabai/wiki/Installing-yabai-(latest-release)
