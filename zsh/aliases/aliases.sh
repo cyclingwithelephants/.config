@@ -24,7 +24,11 @@ alias tf='terraform'
 
 alias vim="nvim"
 
-alias ls='ls --color=auto -hv'
+#alias ls='ls --color=auto -hv'
 alias grep='grep --color=auto'
 alias diff='diff --color=auto'
 alias ip='ip -c=auto'
+
+# -i causes mv to write a prompt to standard error before moving a file that would overwrite an existing
+# file. If the response from the standard input begins with the character ‘y’ or ‘Y’, the move is attempted
+alias mv='mv -i'

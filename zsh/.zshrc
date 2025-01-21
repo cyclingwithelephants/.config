@@ -14,6 +14,8 @@ HISTFILE=$XDG_STATE_HOME/zsh/history
 autoload -U compinit
 compinit -d "${XDG_DATA_DIR}/zsh"
 
+setopt inc_append_history
+
 # prompt
 PS1='%F{yellow}%n@%m% %f %F{magenta}%~%f %F{yellow}>%f '
 
