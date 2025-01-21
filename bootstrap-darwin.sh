@@ -18,7 +18,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 brew bundle install --file "${HOMEBREW_BREWFILE}"
 brew bundle cleanup --file "${HOMEBREW_BREWFILE}" --force
 
-# zshrc will load all config from ~/.config/zsh/* thanks to ~/.zshenv specifying ZDOTDIR
+# zshrc will load all config from ~/.config/zsh/* thanks to /etc/.zshenv specifying ZDOTDIR
 sudo ln -sf "${HOME}/.config/zsh/.zshenv" /etc/zshenv
 chmod +r /etc/zshenv
 
