@@ -32,3 +32,6 @@ alias ip='ip -c=auto'
 # -i causes mv to write a prompt to standard error before moving a file that would overwrite an existing
 # file. If the response from the standard input begins with the character ‘y’ or ‘Y’, the move is attempted
 alias mv='mv -i'
+
+# prevents .wget-hsts from being created in $HOME
+alias wget="wget --hsts-file=${XDG_STATE_HOME}/wget-hsts"
