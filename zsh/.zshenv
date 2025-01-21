@@ -26,7 +26,6 @@ export GO111MODULE=on
 export HOMEBREW_BREWFILE="${XDG_CONFIG_HOME}/brewfile/Brewfile"
 export HOMEBREW_BAT=1 # uses bat instead of cat
 export HOMEBREW_BOOTSNAP=1
-export HOMEBREW_CLEANUP_PERIODIC_FULL_DAYS=30
 
 # java
 # this allows java based apps to show (e.g. goland)
