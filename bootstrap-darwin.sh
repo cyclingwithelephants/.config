@@ -13,9 +13,9 @@ if [[ "$(which brew)" == "brew not found" ]]; then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
-brew bundle install --file ${HOMEBREW_BREWFILE}
+brew bundle install --file "${HOMEBREW_BREWFILE}"
 # clean up applications not installed using the brewfile
-brew bundle --force cleanup --file ${HOMEBREW_BREWFILE}
+brew bundle --force cleanup --file "${HOMEBREW_BREWFILE}"
 
 # zshrc will load all config from ~/.config/zsh/* thanks to ~/.zshenv specifying ZDOTDIR
 SYSTEM_ZSHENV=/etc/zshenv
