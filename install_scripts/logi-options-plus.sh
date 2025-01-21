@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 tmp_dir=/tmp/install_scripts/log-options-plus
 pkg_path="${tmp_dir}/installer.zip"

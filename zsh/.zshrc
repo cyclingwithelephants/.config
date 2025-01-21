@@ -1,25 +1,21 @@
-
-# Source custom functions
 for func in ${ZDOTDIR}/functions/*; do
   source "$func"
 done
 
-# Source custom aliases
 for alias_file in ${ZDOTDIR}/aliases/*; do
   source "$alias_file"
 done
 
+# this seems to need to be set in .zshrc over .zshenv
+HISTFILE=$XDG_STATE_HOME/zsh/history
+
 # This is for zsh auto-completion
-autoload -Uz compinit
-compinit
+# -d sets the directory to store completions
+autoload -U compinit
+compinit -d "${XDG_DATA_DIR}/zsh"
 
 # prompt
-autoload -U colors 
-colors
-export PS1="%{$fg[yellow]%}[%n@%m%{$reset_color%}%{$fg[magenta]%} %~%{$reset_color%}%{$fg[yellow]%}]: %{$reset_color%}"
-
-# To get nice colours in my ls funciton
-export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
+PS1='%F{yellow}%n@%m% %f %F{magenta}%~%f %F{yellow}>%f '
 
 # for using git with SSH to autoload the agent
 eval "$(ssh-agent -s)" 1> /dev/null
@@ -35,9 +31,7 @@ source_if_exists '/Users/adam/google-cloud-sdk/path.zsh.inc'
 # Enables shell command completion for gcloud.
 source_if_exists '/Users/adam/google-cloud-sdk/completion.zsh.inc'
 
-
 # Enables the following plugins for zsh (without oh-my-zsh)
-# macos ARM64
 source_if_exists /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source_if_exists /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 

@@ -18,9 +18,13 @@ alias kg='kubectl get'
 alias kx='kubectx'
 alias kwatch='watch -n 1 kubectl'
 
-# for when I need to cheer myself up
 alias please='sudo'
 
 alias tf='terraform'
 
 alias vim="nvim"
+
+alias ls='ls --color=auto -hv'
+alias grep='grep --color=auto'
+alias diff='diff --color=auto'
+alias ip='ip -c=auto'
