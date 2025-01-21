@@ -22,9 +22,3 @@ pavucontrol.ini
 qBittorrent
 # rclone stores credentials in configuration
 rclone
-zsh/.zcompdump*
-zsh/.zsh_history
-zsh/.zshrc.backup
-zsh/.zsh_sessions/
-zsh/.zcompcache/
-zsh/.zprofile
