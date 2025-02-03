@@ -37,3 +37,7 @@ touch ~/.hushlogin
 for script in ./install_scripts/*; do
 	bash "${script}"
 done
+
+# done to disable automatic updates by bitwarden
+# WARN: this might have unintended consequences for other applications, but bitwarden doesn't offer an alternative method for this
+launchctl setenv ELECTRON_NO_UPDATER 1
