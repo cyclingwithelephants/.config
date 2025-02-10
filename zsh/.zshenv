@@ -14,7 +14,7 @@ export SAVEHIST=100000
 # terminal
 export CLICOLOR=1
 export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
-export PATH="/opt/homebrew/bin:${HOME}/bin:${PATH}"
+export PATH="/opt/homebrew/bin:${HOME}/bin:/Library/TeX/texbin:/Applications/GoLand.app/Contents/MacOS:${PATH}"
 
 # go
 export GOPATH="${HOME}/code/golang"
