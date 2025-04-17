@@ -17,8 +17,8 @@ export LSCOLORS='fxafxxxxgxxxxxxxxxxxxx'
 export PATH="/opt/homebrew/bin:${HOME}/bin:/Library/TeX/texbin:/Applications/GoLand.app/Contents/MacOS:${PATH}"
 
 # go
-export GOPATH="${HOME}/code/golang"
-export GOROOT="${HOME}/go"
+export GOPATH="${XDG_CACHE_HOME}/go"
+export GOBIN="${XDG_DATA_HOME}/go"
 export GOOS="darwin"
 export GO111MODULE=on
 
