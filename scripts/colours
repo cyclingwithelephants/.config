@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+###############################################################################
+# show-ansi-colours.sh
+# Print a quick reference for ANSI colour codes in the terminal.
+###############################################################################
+
+# 1) The 16 standard colours ---------------------------------------------------
+echo -e "\n\033[1m### 16-colour palette (foreground only) ###\033[0m"
+standard_names=(
+  "0  Black      " "1  Red        " "2  Green      " "3  Yellow     "
+  "4  Blue       " "5  Magenta    " "6  Cyan       " "7  White      "
+  "8  BrightBlk  " "9  BrightRed  " "10 BrightGrn  " "11 BrightYel  "
+  "12 BrightBlu  " "13 BrightMag  " "14 BrightCyn  " "15 BrightWht "
+)
+
+for i in {0..15}; do
+  code=${standard_names[$i]}
+  printf "\033[48;5;${i}m\033[38;5;$(( (i>7) ? 0 : 15 ))m %-15s \033[0m" "[$code]"
+  # Line break after every 8 swatches
+  (( (i+1)%8==0 )) && echo
+done
+
+# 2) The full 256-colour table -------------------------------------------------
+echo -e "\n\033[1m### 256-colour palette (foreground = code) ###\033[0m"
+for row in {0..15}; do
+  for col in {0..15}; do
+    idx=$(( row*16 + col ))
+    printf "\033[38;5;${idx}m%03d\033[0m " "${idx}"
+  done
+  echo
+done
+
+# 3) Quick hint ---------------------------------------------------------------
+cat <<'EOF'
+
+How to use:
+ - Foreground: echo -e "\033[38;5;<n>mYour text\033[0m"
+ - Background: echo -e "\033[48;5;<n>mYour text\033[0m"
+ - Reset      : echo -e "\033[0m"
+
+Replace <n> with any code you liked from the table above.
+EOF
+

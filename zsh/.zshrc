@@ -39,3 +39,8 @@ source_if_exists /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highligh
 
 # Machine specific config
 source_if_exists "${HOME}/.zshrc"
+
+# https://medium.com/marvelous-mlops/the-rightway-to-install-python-on-a-mac-f3146d9d9a32
+eval "$(pyenv init -)"
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+export PATH="$HOME/.local/bin:$PATH"

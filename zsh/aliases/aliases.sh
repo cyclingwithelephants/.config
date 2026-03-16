@@ -20,7 +20,8 @@ alias kwatch='watch -n 1 kubectl'
 
 alias please='sudo'
 
-alias tf='terraform'
+alias tf='tofu'
+alias ts='tailscale'
 
 alias vim="nvim"
 

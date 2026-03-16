@@ -1,0 +1,12 @@
+contexts:
+- name: argocd.adamland.xyz
+  server: argocd.adamland.xyz
+  user: argocd.adamland.xyz
+current-context: argocd.adamland.xyz
+prompts-enabled: false
+servers:
+- grpc-web-root-path: ""
+  server: argocd.adamland.xyz
+users:
+- auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJhZG1pbjpsb2dpbiIsImV4cCI6MTc2MDk1NTAwOCwibmJmIjoxNzYwODY4NjA4LCJpYXQiOjE3NjA4Njg2MDgsImp0aSI6IjUzNTUyOTU4LWJmNTgtNDM2OC04M2YxLTAyOGVlYTBhYTM2MyJ9.nbYxZanGU51JpU-pzUYVQOfmHEInKCr6uHXqhi2bhN4
+  name: argocd.adamland.xyz

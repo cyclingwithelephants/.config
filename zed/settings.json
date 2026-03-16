@@ -7,11 +7,76 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "disable_ai": true,
+  "agent_servers": {
+    "claude": {}
+  },
+  "agent": {
+    "default_model": {
+      "provider": "ollama",
+      "model": "qwen3:30b"
+    },
+    "model_parameters": [],
+    "use_modifier_to_send": true
+  },
   "ui_font_size": 16,
   "buffer_font_size": 16,
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "One Dark"
+    "dark": "macOS Classic Dark"
+  },
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 1000
+    }
+  },
+  "auto_install_extensions": {
+    "html": true,
+    "dockerfile": true,
+    "docker-compose": false
+  },
+  "file_types": {
+    "Helm": [
+      "**/templates/**/*.tpl",
+      "**/templates/**/*.yaml",
+      "**/templates/**/*.yml",
+      "**/helmfile.d/**/*.yaml",
+      "**/helmfile.d/**/*.yml",
+      "**/values*.yaml"
+    ]
+  },
+  "lsp": {
+    "helm_ls": {
+      "settings": {
+        "helm-ls": {
+          "logLevel": "info",
+          "yamlls": {
+            "enabled": true
+          }
+        }
+      }
+    }
+  },
+  "language_models": {
+    "openai_compatible": {
+      // Using Together AI as an example
+      "chat.adamland.xyz": {
+        "api_url": "https://chat.adamland.xyz",
+        "available_models": [
+          {
+            "name": "qwen3-30b-moe-thinking",
+            "display_name": "qwen3-30b-moe-thinking",
+            "max_tokens": 32768,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false
+            }
+          }
+        ]
+      }
+    }
   }
 }
