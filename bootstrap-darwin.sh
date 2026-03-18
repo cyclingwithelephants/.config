@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+set -x
 hostname=shallot
 
 set -eou pipefail
@@ -15,9 +15,6 @@ if [[ "$(which brew)" == "brew not found" ]]; then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
-brew bundle install --file "${HOMEBREW_BREWFILE}"
-brew bundle cleanup --file "${HOMEBREW_BREWFILE}" --force
-
 # zshrc will load all config from ~/.config/zsh/* thanks to /etc/.zshenv specifying ZDOTDIR
 sudo ln -sf "${HOME}/.config/zsh/.zshenv" /etc/zshenv
 chmod +r /etc/zshenv
@@ -33,11 +30,17 @@ sudo scutil --set ComputerName "${hostname}"
 # this stops the "last login" message in the terminal, slightly increasing its speed
 touch ~/.hushlogin
 
+# done to disable automatic updates by bitwarden
+# WARN: this might have unintended consequences for other applications, but bitwarden doesn't offer an alternative method for this
+launchctl setenv ELECTRON_NO_UPDATER 1
+
+echo "brew install may take a few hours if you're not on fast internet, and it may look like it's hanging. It isn't."
+brew bundle install --file "${HOMEBREW_BREWFILE}" --verbose
+brew bundle cleanup --file "${HOMEBREW_BREWFILE}" --verbose --force
+
 # install packages that are otherwise awkward to install using a Brewfile
 for script in ./install_scripts/*; do
 	bash "${script}"
 done
 
-# done to disable automatic updates by bitwarden
-# WARN: this might have unintended consequences for other applications, but bitwarden doesn't offer an alternative method for this
-launchctl setenv ELECTRON_NO_UPDATER 1
+

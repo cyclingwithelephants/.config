@@ -37,7 +37,8 @@ export LESSHISTFILE="${XDG_STATE_HOME}/less/history"
 # seems to be broken
 # # enabled vim to follow the XDG spec, storing config in $XDG_CONFIG_HOME/vim/vimrc
 # export VIMINIT='let $MYVIMRC="$XDG_CONFIG_HOME/vim/vimrc" | source $MYVIMRC'
-. "$HOME/.cargo/env"
+
+test -f "$HOME/.cargo/env" && . "$HOME/.cargo/env"
 
 # Kubernetes
 export KUBECONFIG="$HOME/.kube/config:$(echo $HOME/.kube/config.* | tr ' ' ':')"
