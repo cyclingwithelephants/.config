@@ -9,32 +9,43 @@
 {
   "disable_ai": true,
   "agent_servers": {
-    "claude": {}
+    "claude-acp": {
+      "type": "registry",
+    },
   },
   "agent": {
     "default_model": {
       "provider": "ollama",
-      "model": "qwen3:30b"
+      "model": "qwen3:30b",
     },
     "model_parameters": [],
-    "use_modifier_to_send": true
+    "use_modifier_to_send": true,
   },
   "ui_font_size": 16,
   "buffer_font_size": 16,
   "theme": {
-    "mode": "system",
-    "light": "One Light",
-    "dark": "macOS Classic Dark"
+    "mode": "dark",
+    "light": "macOS Classic Light",
+    "dark": "macOS Classic Dark",
   },
   "autosave": {
     "after_delay": {
-      "milliseconds": 1000
-    }
+      "milliseconds": 1000,
+    },
   },
   "auto_install_extensions": {
     "html": true,
+    "toml": true,
     "dockerfile": true,
-    "docker-compose": false
+    "macos-classic": true,
+    "sql": true,
+    "make": true,
+    "terraform": true,
+    "yaml": true,
+    "latex": true,
+    "rust": true,
+    "nix": true,
+    "json5": true,
   },
   "file_types": {
     "Helm": [
@@ -43,8 +54,8 @@
       "**/templates/**/*.yml",
       "**/helmfile.d/**/*.yaml",
       "**/helmfile.d/**/*.yml",
-      "**/values*.yaml"
-    ]
+      "**/values*.yaml",
+    ],
   },
   "lsp": {
     "helm_ls": {
@@ -52,11 +63,11 @@
         "helm-ls": {
           "logLevel": "info",
           "yamlls": {
-            "enabled": true
-          }
-        }
-      }
-    }
+            "enabled": true,
+          },
+        },
+      },
+    },
   },
   "language_models": {
     "openai_compatible": {
@@ -72,11 +83,11 @@
               "tools": true,
               "images": false,
               "parallel_tool_calls": false,
-              "prompt_cache_key": false
-            }
-          }
-        ]
-      }
-    }
-  }
+              "prompt_cache_key": false,
+            },
+          },
+        ],
+      },
+    },
+  },
 }

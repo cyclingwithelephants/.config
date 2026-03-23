@@ -6,7 +6,7 @@
 
 zsh/.zsh_sessions/
 
-brewfile/Brewfile.lock.json
+homebrew/Brewfile.lock.json
 # npm
 configstore
 gcloud

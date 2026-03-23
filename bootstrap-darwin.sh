@@ -1,46 +1,175 @@
 #!/usr/bin/env bash
-set -x
-hostname=shallot
-
 set -eou pipefail
 
-cd $(dirname $(readlink -f $0))
-source zsh/.zshenv
+hostname=shallot
 
-# add self to sudoers, we do this first to prevent needing to write password multiple times
-echo "$(whoami) ALL=(ALL) NOPASSWD: ALL" | sudo EDITOR='tee' visudo -f "/private/etc/sudoers.d/$(whoami)"
+function setup() {
+    cd $(dirname $(readlink -f $0))
+    source zsh/.zshenv
+}
 
-# install applications using brew
-if [[ "$(which brew)" == "brew not found" ]]; then
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
-eval "$(/opt/homebrew/bin/brew shellenv)"
-# zshrc will load all config from ~/.config/zsh/* thanks to /etc/.zshenv specifying ZDOTDIR
-sudo ln -sf "${HOME}/.config/zsh/.zshenv" /etc/zshenv
-chmod +r /etc/zshenv
+function configure_sudo_nopasswd() {
+    echo "$(whoami) ALL=(ALL) NOPASSWD: ALL" | sudo EDITOR='tee' visudo -f "/private/etc/sudoers.d/$(whoami)"
+}
 
-##
-## Apple specific configuration
+function configure_hostname() {
+    # https://www.autodesk.com/support/technical/article/caas/sfdcarticles/sfdcarticles/Setting-the-Mac-hostname-or-computer-name-from-the-terminal.html
+    sudo scutil --set HostName "${hostname}"
+    sudo scutil --set LocalHostName "${hostname}"
+    sudo scutil --set ComputerName "${hostname}"
+}
 
-# https://www.autodesk.com/support/technical/article/caas/sfdcarticles/sfdcarticles/Setting-the-Mac-hostname-or-computer-name-from-the-terminal.html
-sudo scutil --set HostName "${hostname}"
-sudo scutil --set LocalHostName "${hostname}"
-sudo scutil --set ComputerName "${hostname}"
+function configure_key_repeat() {
+    # Fastest repeat rate and shortest delay available in System Settings UI
+    defaults write NSGlobalDomain KeyRepeat -int 2
+    defaults write NSGlobalDomain InitialKeyRepeat -int 15
+}
 
-# this stops the "last login" message in the terminal, slightly increasing its speed
-touch ~/.hushlogin
+function configure_dock() {
+    # remove all items from the dock
+    defaults write com.apple.dock persistent-apps -array
+    defaults write com.apple.dock persistent-others -array
+    defaults write com.apple.dock show-recents -bool false
 
-# done to disable automatic updates by bitwarden
-# WARN: this might have unintended consequences for other applications, but bitwarden doesn't offer an alternative method for this
-launchctl setenv ELECTRON_NO_UPDATER 1
+    # set the dock to autohide
+    defaults write com.apple.dock autohide-delay -float 0
+    defaults write com.apple.dock autohide-time-modifier -float 0.5  # animation speed in seconds
 
-echo "brew install may take a few hours if you're not on fast internet, and it may look like it's hanging. It isn't."
-brew bundle install --file "${HOMEBREW_BREWFILE}" --verbose
-brew bundle cleanup --file "${HOMEBREW_BREWFILE}" --verbose --force
+    # Don't rearrange Spaces based on recent use (very annoying default)
+    defaults write com.apple.dock mru-spaces -bool false
 
-# install packages that are otherwise awkward to install using a Brewfile
-for script in ./install_scripts/*; do
-	bash "${script}"
-done
+    # add the Downloads folder to the dock
+    defaults write com.apple.dock persistent-others -array-add '
+    <dict>
+        <key>tile-data</key>
+        <dict>
+            <key>file-data</key>
+            <dict>
+                <key>_CFURLString</key>
+                <string>/Users/'"$USER"'/Downloads</string>
+                <key>_CFURLStringType</key>
+                <integer>0</integer>
+            </dict>
+            <key>displayas</key>
+            <integer>1</integer>
+            <key>showas</key>
+            <integer>2</integer>
+        </dict>
+        <key>tile-type</key>
+        <string>directory-tile</string>
+    </dict>'
 
+    killall Dock
+}
 
+function configure_finder() {
+    # Show all file extensions
+    defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+    # Show hidden files
+    defaults write com.apple.finder AppleShowAllFiles -bool true
+
+    # Show path bar at bottom
+    defaults write com.apple.finder ShowPathbar -bool true
+
+    # Show status bar at bottom
+    defaults write com.apple.finder ShowStatusBar -bool true
+
+    # Default to list view
+    defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+
+    # Search current folder by default (instead of whole Mac)
+    defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+
+    # Disable the warning when changing a file extension
+    defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+
+    # Set the new window target to "Home" (PfHm = home directory)
+    defaults write com.apple.finder NewWindowTarget -string "PfHm"
+
+    # Set the actual path for the home directory
+    defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
+
+    killall Finder
+}
+
+function configure_screenshots() {
+    # Change screenshot save location
+    defaults write com.apple.screencapture location ~/Pictures/Screenshots
+
+    # Remove shadow from window screenshots
+    defaults write com.apple.screencapture disable-shadow -bool true
+
+    # Save as jpg instead of png
+    defaults write com.apple.screencapture type jpg
+}
+
+function configure_trackpad() {
+    # Enable tap-to-click (no need to physically press)
+    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+    defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+}
+
+function configure_touch_id() {
+    # Enable sudo Touch ID
+    sudo sed -i '' '2s/^/auth       sufficient     pam_tid.so\n/' /etc/pam.d/sudo
+}
+
+function configure_window_size() {
+    # Expand save panel by default
+    defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+
+    # Expand print panel by default
+    defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+}
+
+function configure_no_autoupdate() {
+    # done to disable automatic updates by bitwarden
+    # we have to set here for mac compatibility, it's also set in zshenv for linux
+    # WARN: this might have unintended consequences for other applications
+    # but bitwarden doesn't offer an alternative method for this
+    launchctl setenv ELECTRON_NO_UPDATER 1
+}
+
+function configure_hushlogin() {
+    # this stops the "last login" message in the terminal
+    touch ~/.hushlogin
+}
+
+function install_packages() {
+    # install applications using brew
+    if [[ "$(which brew)" == "brew not found" ]]; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    # zshrc will load all config from ~/.config/zsh/* thanks to /etc/.zshenv specifying ZDOTDIR
+    sudo ln -sf "${HOME}/.config/zsh/.zshenv" /etc/zshenv
+
+    echo "brew install may look like it's hanging. It might take a few hours to install packages."
+    brew bundle install \
+        --verbose \
+        --cleanup
+
+    # install packages that are otherwise awkward to install using a Brewfile
+    for script in ./install_scripts/*; do
+        bash "${script}"
+    done
+}
+
+function main() {
+    setup
+    configure_sudo_nopasswd
+    configure_hostname
+    configure_dock
+    configure_finder
+    configure_hushlogin
+    configure_key_repeat
+    configure_screenshots
+    configure_touch_id
+    configure_trackpad
+    configure_window_size
+    install_packages
+}
+
+main

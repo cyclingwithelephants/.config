@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 ###############################################################################
-# show-ansi-colours.sh
 # Print a quick reference for ANSI colour codes in the terminal.
 ###############################################################################
 
@@ -40,4 +39,3 @@ How to use:
 
 Replace <n> with any code you liked from the table above.
 EOF
-
