@@ -9,6 +9,9 @@ if [[ -e /Applications/logioptionsplus.app/ ]]; then
 fi
 
 echo "installing: logi-options-plus"
+# WARN: the ZIP downloaded here has no checksum verification.
+# If Logitech's CDN (download01.logi.com) were compromised, this would execute arbitrary code.
+# To harden: download the installer manually, verify its hash, and replace this block.
 mkdir -p "${tmp_dir}"
 cd "${tmp_dir}" || exit 1
 wget https://download01.logi.com/web/ftp/pub/techsupport/optionsplus/logioptionsplus_installer.zip -O "${pkg_path}"

@@ -24,3 +24,5 @@ pavucontrol.ini
 qBittorrent
 # rclone stores credentials in configuration
 rclone
+
+zed/prompts/

@@ -4,6 +4,11 @@ set -eou pipefail
 hostname=shallot
 
 function setup() {
+    if [[ "$(uname)" != "Darwin" ]]; then
+        echo "Error: this script only supports macOS" >&2
+        exit 1
+    fi
+
     cd $(dirname $(readlink -f $0))
     source zsh/.zshenv
 }
@@ -59,12 +64,12 @@ function configure_dock() {
         <string>directory-tile</string>
     </dict>'
 
-    killall Dock
+    killall Dock 2>/dev/null || true
 }
 
 function configure_finder() {
-    # Show all file extensions
-    defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+    # Don't show all file extensions (i.e. <app-name>.app is <app-name>)
+    defaults write NSGlobalDomain AppleShowAllExtensions -bool false
 
     # Show hidden files
     defaults write com.apple.finder AppleShowAllFiles -bool true
@@ -90,7 +95,7 @@ function configure_finder() {
     # Set the actual path for the home directory
     defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
 
-    killall Finder
+    killall Finder 2>/dev/null || true
 }
 
 function configure_screenshots() {
@@ -112,7 +117,9 @@ function configure_trackpad() {
 
 function configure_touch_id() {
     # Enable sudo Touch ID
-    sudo sed -i '' '2s/^/auth       sufficient     pam_tid.so\n/' /etc/pam.d/sudo
+    if ! grep -q "pam_tid.so" /etc/pam.d/sudo; then
+        sudo sed -i '' '2s/^/auth       sufficient     pam_tid.so\n/' /etc/pam.d/sudo
+    fi
 }
 
 function configure_window_size() {
@@ -133,12 +140,12 @@ function configure_no_autoupdate() {
 
 function configure_hushlogin() {
     # this stops the "last login" message in the terminal
-    touch ~/.hushlogin
+    touch /etc/huslogin
 }
 
 function install_packages() {
     # install applications using brew
-    if [[ "$(which brew)" == "brew not found" ]]; then
+    if ! command -v brew &>/dev/null; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
 
@@ -146,12 +153,19 @@ function install_packages() {
     # zshrc will load all config from ~/.config/zsh/* thanks to /etc/.zshenv specifying ZDOTDIR
     sudo ln -sf "${HOME}/.config/zsh/.zshenv" /etc/zshenv
 
+    if [[ ! -f "./homebrew/Brewfile" ]]; then
+        echo "Error: homebrew/Brewfile not found" >&2
+        return 1
+    fi
+
     echo "brew install may look like it's hanging. It might take a few hours to install packages."
-    brew bundle install \
+    brew bundle \
+        --global \
         --verbose \
         --cleanup
 
     # install packages that are otherwise awkward to install using a Brewfile
+    set -e
     for script in ./install_scripts/*; do
         bash "${script}"
     done
