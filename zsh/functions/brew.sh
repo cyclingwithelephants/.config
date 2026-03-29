@@ -1,10 +1,17 @@
 # This code is used so that I can transparently use `brew install XYZ`
 # and this script will keep the Brewfile automatically up to date
 
+brewfile_path() {
+	echo "${HOMEBREW_BUNDLE_FILE_GLOBAL:-${XDG_CONFIG_HOME:-$HOME/.config}/homebrew/Brewfile}"
+}
+
 # Function to handle brew install and update the Brewfile
 brew_install_with_brewfile() {
 	IS_CASK=0
 	FORMULA=""
+	local brewfile
+
+	brewfile="$(brewfile_path)"
 
 	# Parse arguments to handle "--cask" regardless of position
 	for arg in "$@"; do
@@ -21,9 +28,9 @@ brew_install_with_brewfile() {
 	fi
 
 	# Ensure the Brewfile exists
-	if [[ ! -f "$HOMEBREW_BREWFILE" ]]; then
-		mkdir -p "$(dirname "$HOMEBREW_BREWFILE")"
-		touch "$HOMEBREW_BREWFILE"
+	if [[ ! -f "$brewfile" ]]; then
+		mkdir -p "$(dirname "$brewfile")"
+		touch "$brewfile"
 	fi
 
 	# Ensure the formula gets installed as either a formula or cask correctly
@@ -51,9 +58,12 @@ add_to_brewfile() {
 	ENTRY_TYPE="$2"
 	FORMULA="$1"
 	ENTRY="$ENTRY_TYPE \"$FORMULA\""
+	local brewfile
+
+	brewfile="$(brewfile_path)"
 
 	# Check if the entry already exists
-	if grep -qE "^$ENTRY$" "$HOMEBREW_BREWFILE"; then
+	if grep -qE "^$ENTRY$" "$brewfile"; then
 		echo "$ENTRY is already in the Brewfile."
 	else
 		TMPFILE=$(mktemp)
@@ -75,8 +85,8 @@ add_to_brewfile() {
       END {
         if (!placed) print entry
       }
-    ' "$HOMEBREW_BREWFILE" >"$TMPFILE"
-		mv "$TMPFILE" "$HOMEBREW_BREWFILE"
+    ' "$brewfile" >"$TMPFILE"
+		mv "$TMPFILE" "$brewfile"
 		echo "Added \"$FORMULA\" to the Brewfile as $ENTRY."
 	fi
 }
@@ -85,6 +95,9 @@ add_to_brewfile() {
 brew_uninstall_with_brewfile() {
 	IS_CASK=0
 	FORMULA=""
+	local brewfile
+
+	brewfile="$(brewfile_path)"
 
 	# Parse arguments to handle "--cask" regardless of position
 	for arg in "$@"; do
@@ -101,8 +114,8 @@ brew_uninstall_with_brewfile() {
 	fi
 
 	# Ensure the Brewfile exists
-	if [[ ! -f "$HOMEBREW_BREWFILE" ]]; then
-		echo "No Brewfile found at $HOMEBREW_BREWFILE."
+	if [[ ! -f "$brewfile" ]]; then
+		echo "No Brewfile found at $brewfile."
 		return 1
 	fi
 
@@ -124,8 +137,8 @@ brew_uninstall_with_brewfile() {
 	fi
 
 	# Check if the entry exists in the Brewfile and remove it
-	if grep -qE "^$ENTRY$" "$HOMEBREW_BREWFILE"; then
-		sed -i.bak "/^$ENTRY$/d" "$HOMEBREW_BREWFILE" && rm -f "$HOMEBREW_BREWFILE.bak"
+	if grep -qE "^$ENTRY$" "$brewfile"; then
+		sed -i.bak "/^$ENTRY$/d" "$brewfile" && rm -f "$brewfile.bak"
 		echo "Removed \"$FORMULA\" from the Brewfile."
 	else
 		echo "\"$FORMULA\" was not found in the Brewfile."

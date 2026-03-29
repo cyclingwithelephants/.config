@@ -1,7 +1,9 @@
 #!/usr/bin/env zsh
-set -eou pipefail
+set -euo pipefail
 
-hostname=shallot
+SCRIPT_DIR="${0:A:h}"
+CONFIG_DIR="${SCRIPT_DIR}/config"
+hostname=""
 
 function setup() {
     if [[ "$(uname)" != "Darwin" ]]; then
@@ -9,9 +11,44 @@ function setup() {
         exit 1
     fi
 
-    cd $(dirname $(readlink -f $0))
+    # we assume execution from the ~/.config directory
+    cd "${SCRIPT_DIR}/.."
 
     source zsh/.zshenv
+}
+
+function resolve_machine_name() {
+    if [[ $# -ge 1 && -n "$1" ]]; then
+        echo "$1"
+        return 0
+    fi
+
+    local detected_hostname
+    detected_hostname="$(hostname)"
+
+    if [[ -z "${detected_hostname}" ]]; then
+        echo "Error: failed to detect hostname" >&2
+        exit 1
+    fi
+
+    echo "${detected_hostname}"
+}
+
+function load_machine_config() {
+    local machine_name="$1"
+    local config_path="${CONFIG_DIR}/${machine_name}.sh"
+
+    if [[ ! -f "${config_path}" ]]; then
+        echo "Error: no machine config found for '${machine_name}' at ${config_path}" >&2
+        exit 1
+    fi
+
+    source "${config_path}"
+
+    if [[ -z "${hostname}" ]]; then
+        echo "Error: machine config '${config_path}' must set hostname" >&2
+        exit 1
+    fi
 }
 
 function configure_sudo_nopasswd() {
@@ -182,14 +219,17 @@ function install_packages() {
         --cleanup
 
     # install packages that are otherwise awkward to install using a Brewfile
-    set -e
     for script in ./install_scripts/*; do
         bash "${script}"
     done
 }
 
 function main() {
+    local machine_name
+
     setup
+    machine_name="$(resolve_machine_name "${1:-}")"
+    load_machine_config "${machine_name}"
     configure_sudo_nopasswd
     configure_hostname
     configure_dock
@@ -204,4 +244,4 @@ function main() {
     install_packages
 }
 
-main
+main "$@"
