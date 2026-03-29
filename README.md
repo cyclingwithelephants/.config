@@ -31,6 +31,16 @@ If no machine name is passed, the bootstrap script detects the current hostname 
 - **Login message**: suppressed via `~/.hushlogin`
 - **Packages**: installs everything in `homebrew/Brewfile` via `brew bundle`, then runs scripts in `install_scripts/`
 
+### Configure sharing services manually
+
+Some macOS sharing services now require privacy permissions that are awkward or unreliable to automate from a shell script. After running the bootstrap, enable these manually in System Settings if you want them:
+
+- **Remote Login (SSH)**: `System Settings > General > Sharing > Remote Login`
+- **Remote Management**: `System Settings > General > Sharing > Remote Management`
+- **Content Caching**: `System Settings > General > Sharing > Content Caching`
+
+In particular, `systemsetup -setremotelogin on` can require Full Disk Access for the terminal app running the bootstrap, so this is documented instead of automated.
+
 ## Highlights
 
 ### Automated Brewfile management

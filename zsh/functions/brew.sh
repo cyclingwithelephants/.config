@@ -120,26 +120,30 @@ brew_uninstall_with_brewfile() {
 	fi
 
 	# Uninstall the formula or cask (pass --cask only if required)
+	# Don't abort on failure — the package may already be uninstalled,
+	# but we still want to clean it from the Brewfile
 	if [[ $IS_CASK -eq 1 ]]; then
-		if command brew uninstall --cask "$FORMULA"; then
-			ENTRY="cask \"$FORMULA\""
-		else
-			echo "Failed to uninstall \"$FORMULA\"."
-			return 1
-		fi
+		command brew uninstall --cask "$FORMULA" 2>/dev/null ||
+			echo "Note: \"$FORMULA\" was not installed (already removed?)."
+		ENTRY="cask \"$FORMULA\""
 	else
-		if command brew uninstall "$FORMULA"; then
-			ENTRY="brew \"$FORMULA\""
-		else
-			echo "Failed to uninstall \"$FORMULA\"."
-			return 1
-		fi
+		command brew uninstall "$FORMULA" 2>/dev/null ||
+			echo "Note: \"$FORMULA\" was not installed (already removed?)."
+		ENTRY="brew \"$FORMULA\""
 	fi
 
 	# Check if the entry exists in the Brewfile and remove it
+	# If --cask wasn't specified, also check for a cask entry (and vice versa),
+	# since brew uninstall works without --cask but the Brewfile may list it as a cask
 	if grep -qE "^$ENTRY$" "$brewfile"; then
 		sed -i.bak "/^$ENTRY$/d" "$brewfile" && rm -f "$brewfile.bak"
 		echo "Removed \"$FORMULA\" from the Brewfile."
+	elif [[ $IS_CASK -eq 0 ]] && grep -qE "^cask \"$FORMULA\"$" "$brewfile"; then
+		sed -i.bak "/^cask \"$FORMULA\"$/d" "$brewfile" && rm -f "$brewfile.bak"
+		echo "Removed \"$FORMULA\" from the Brewfile (was listed as cask)."
+	elif [[ $IS_CASK -eq 1 ]] && grep -qE "^brew \"$FORMULA\"$" "$brewfile"; then
+		sed -i.bak "/^brew \"$FORMULA\"$/d" "$brewfile" && rm -f "$brewfile.bak"
+		echo "Removed \"$FORMULA\" from the Brewfile (was listed as brew)."
 	else
 		echo "\"$FORMULA\" was not found in the Brewfile."
 	fi

@@ -90,7 +90,6 @@ brew "zsh-syntax-highlighting"
 
 # ── Casks ──────────────────────────────────────────────────────────────────
 
-cask "alacritty"
 cask "balenaetcher"
 cask "bitwarden"
 cask "claude-code"
