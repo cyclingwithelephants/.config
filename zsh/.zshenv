@@ -25,7 +25,7 @@ export GO111MODULE=on
 # homebrew
 export HOMEBREW_BAT=1 # uses bat instead of cat
 export HOMEBREW_BOOTSNAP=1
-export HOMEBREW_BUNDLE_FILE_GLOBAL="${XDG_CONFIG_HOME}/homebrew/Brewfile"
+export HOMEBREW_BUNDLE_FILE_GLOBAL="${XDG_CONFIG_HOME}/homebrew/Brewfile.${HOST}"
 
 # java
 # linux: this allows java based apps to show (e.g. goland)

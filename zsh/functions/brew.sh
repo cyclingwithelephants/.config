@@ -2,7 +2,12 @@
 # and this script will keep the Brewfile automatically up to date
 
 brewfile_path() {
-	echo "${HOMEBREW_BUNDLE_FILE_GLOBAL:-${XDG_CONFIG_HOME:-$HOME/.config}/homebrew/Brewfile}"
+	if [[ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ]]; then
+		echo "HOMEBREW_BUNDLE_FILE_GLOBAL is not set." >&2
+		return 1
+	fi
+
+	echo "${HOMEBREW_BUNDLE_FILE_GLOBAL}"
 }
 
 # Function to handle brew install and update the Brewfile
@@ -11,7 +16,7 @@ brew_install_with_brewfile() {
 	FORMULA=""
 	local brewfile
 
-	brewfile="$(brewfile_path)"
+	brewfile="$(brewfile_path)" || return 1
 
 	# Parse arguments to handle "--cask" regardless of position
 	for arg in "$@"; do
@@ -60,7 +65,7 @@ add_to_brewfile() {
 	ENTRY="$ENTRY_TYPE \"$FORMULA\""
 	local brewfile
 
-	brewfile="$(brewfile_path)"
+	brewfile="$(brewfile_path)" || return 1
 
 	# Check if the entry already exists
 	if grep -qE "^$ENTRY$" "$brewfile"; then
@@ -97,7 +102,7 @@ brew_uninstall_with_brewfile() {
 	FORMULA=""
 	local brewfile
 
-	brewfile="$(brewfile_path)"
+	brewfile="$(brewfile_path)" || return 1
 
 	# Parse arguments to handle "--cask" regardless of position
 	for arg in "$@"; do

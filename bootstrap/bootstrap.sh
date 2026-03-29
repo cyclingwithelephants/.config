@@ -182,6 +182,8 @@ function configure_hushlogin() {
 }
 
 function install_packages() {
+    local brewfile_path
+
     # install applications using brew
     if ! command -v brew &>/dev/null; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -190,9 +192,11 @@ function install_packages() {
     eval "$(/opt/homebrew/bin/brew shellenv)"
     # zshrc will load all config from ~/.config/zsh/* thanks to /etc/.zshenv specifying ZDOTDIR
     sudo ln -sf "${HOME}/.config/zsh/.zshenv" /etc/zshenv
+    brewfile_path="./homebrew/Brewfile.${hostname}"
+    export HOMEBREW_BUNDLE_FILE_GLOBAL="${PWD}/homebrew/Brewfile.${hostname}"
 
-    if [[ ! -f "./homebrew/Brewfile" ]]; then
-        echo "Error: homebrew/Brewfile not found" >&2
+    if [[ ! -f "${brewfile_path}" ]]; then
+        echo "Error: ${brewfile_path} not found" >&2
         return 1
     fi
 

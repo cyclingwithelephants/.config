@@ -30,6 +30,7 @@ If no machine name is passed, the bootstrap script detects the current hostname 
 - **Save/print panels**: expanded by default
 - **Login message**: suppressed via `~/.hushlogin`
 - **Packages**: installs everything in `homebrew/Brewfile` via `brew bundle`, then runs scripts in `install_scripts/`
+- **Tailscale**: managed by `brew bundle` via the `tailscale` formula service entry in `homebrew/Brewfile`
 
 ### Configure sharing services manually
 
