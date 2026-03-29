@@ -20,11 +20,13 @@ setopt inc_append_history
 PS1='%F{yellow}%n@%m% %f %F{magenta}%~%f %F{yellow}>%f '
 
 # for using git with SSH to autoload the agent
-eval "$(ssh-agent -s)" 1> /dev/null
+if [[ -z "${SSH_AUTH_SOCK:-}" ]]; then
+  agent_env="$(ssh-agent -s 2>/dev/null)" && eval "$agent_env" > /dev/null
+fi
 # this is super awkward, ssh-add spits out INFO level messages to stderr
 # this could be the cause of bugs down the road, must stay aware
 # TODO: is there some autonomous way to filter out a specific message from stderr?
-ssh-add ~/.ssh/personal/Adams-MBP_github 2> /dev/null
+[[ -r ~/.ssh/personal/Adams-MBP_github ]] && ssh-add ~/.ssh/personal/Adams-MBP_github > /dev/null 2>&1
 
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 

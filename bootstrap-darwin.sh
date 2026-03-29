@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 set -eou pipefail
 
 hostname=shallot
@@ -10,6 +10,7 @@ function setup() {
     fi
 
     cd $(dirname $(readlink -f $0))
+
     source zsh/.zshenv
 }
 
@@ -140,7 +141,23 @@ function configure_no_autoupdate() {
 
 function configure_hushlogin() {
     # this stops the "last login" message in the terminal
-    touch /etc/huslogin
+    sudo touch /etc/hushlogin
+}
+
+function configure_remote_management() {
+    # Enable Sharing > Remote Management programmatically using Apple's ARD tool.
+    local kickstart="/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart"
+    local remote_user="${SUDO_USER:-$USER}"
+
+    sudo "${kickstart}" \
+        -activate \
+        -configure \
+        -access \
+        -on \
+        -users "${remote_user}" \
+        -privs -all \
+        -restart \
+        -agent
 }
 
 function install_packages() {
@@ -179,6 +196,7 @@ function main() {
     configure_finder
     configure_hushlogin
     configure_key_repeat
+    configure_remote_management
     configure_screenshots
     configure_touch_id
     configure_trackpad

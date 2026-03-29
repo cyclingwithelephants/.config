@@ -42,4 +42,12 @@ test -f "$HOME/.cargo/env" && . "$HOME/.cargo/env"
 
 # Kubernetes
 # allows for cluster specific configs in multiple files.
-export KUBECONFIG="$HOME/.kube/config:$(echo $HOME/.kube/config.* 2>/dev/null | tr ' ' ':')"
+typeset -a kubeconfigs
+[[ -f "$HOME/.kube/config" ]] && kubeconfigs+=("$HOME/.kube/config")
+kubeconfigs+=("$HOME"/.kube/config.*(N))
+
+if (( ${#kubeconfigs[@]} )); then
+  export KUBECONFIG="${(j/:/)kubeconfigs}"
+else
+  unset KUBECONFIG
+fi
