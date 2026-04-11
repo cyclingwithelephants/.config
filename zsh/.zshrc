@@ -28,7 +28,7 @@ fi
 # TODO: is there some autonomous way to filter out a specific message from stderr?
 [[ -r ~/.ssh/personal/Adams-MBP_github ]] && ssh-add ~/.ssh/personal/Adams-MBP_github > /dev/null 2>&1
 
-[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
+command -v codex &>/dev/null && eval "$(codex completion zsh)"
 
 # Updates PATH for the Google Cloud SDK.
 source_if_exists '/Users/adam/google-cloud-sdk/path.zsh.inc'
@@ -43,6 +43,6 @@ source_if_exists /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highligh
 source_if_exists "${HOME}/.zshrc"
 
 # https://medium.com/marvelous-mlops/the-rightway-to-install-python-on-a-mac-f3146d9d9a32
-eval "$(pyenv init -)"
-if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+command -v pyenv &>/dev/null && eval "$(pyenv init -)"
+command -v pyenv-virtualenv-init &>/dev/null && eval "$(pyenv virtualenv-init -)"
 export PATH="$HOME/.local/bin:$PATH"
