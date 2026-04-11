@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls /opt/homebrew/share/zsh/site-functions/_codex*)",
+      "Bash(ls /opt/homebrew/share/zsh/site-functions/*codex*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}

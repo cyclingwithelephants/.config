@@ -26,3 +26,8 @@ qBittorrent
 rclone
 
 zed/prompts/
+
+# claude - only track settings, ignore runtime data
+claude/*
+!claude/settings.json
+!claude/settings.local.json

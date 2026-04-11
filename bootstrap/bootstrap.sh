@@ -168,6 +168,28 @@ function configure_window_size() {
     defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
 }
 
+function configure_claude() {
+    # Claude Code hardcodes ~/.claude as its config directory.
+    # Symlink it into XDG_CONFIG_HOME so config lives alongside everything else.
+    local xdg_claude="${XDG_CONFIG_HOME}/claude"
+    local home_claude="${HOME}/.claude"
+
+    mkdir -p "${xdg_claude}"
+
+    if [[ -L "${home_claude}" ]]; then
+        return 0
+    fi
+
+    if [[ -d "${home_claude}" ]]; then
+        echo "Error: ${home_claude} is a real directory, not a symlink." >&2
+        echo "Run: mv ${home_claude} ${home_claude}.bak && ln -s ${xdg_claude} ${home_claude}" >&2
+        echo "Then manually merge ${home_claude}.bak into ${xdg_claude}" >&2
+        return 1
+    fi
+
+    ln -s "${xdg_claude}" "${home_claude}"
+}
+
 function configure_no_autoupdate() {
     # done to disable automatic updates by bitwarden
     # we have to set here for mac compatibility, it's also set in zshenv for linux
@@ -228,6 +250,7 @@ function main() {
     configure_touch_id
     configure_trackpad
     configure_window_size
+    configure_claude
     install_packages
 }
 
