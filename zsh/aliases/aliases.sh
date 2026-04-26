@@ -23,6 +23,57 @@ alias please='sudo'
 alias tf='tofu'
 alias ts='tailscale'
 
+# Sync claude config to radish (run once, or after changing settings/plugins)
+cc-sync() {
+    rsync -az --delete \
+        --exclude='.credentials.json' \
+        --exclude='file-history/' \
+        --exclude='paste-cache/' \
+        --exclude='session-env/' \
+        --exclude='sessions/' \
+        --exclude='shell-snapshots/' \
+        --exclude='tasks/' \
+        --exclude='telemetry/' \
+        --exclude='history.jsonl' \
+        --exclude='stats-cache.json' \
+        --exclude='.DS_Store' \
+        ~/.claude/ radish:~/.claude/
+    [[ -f ~/.claude.json ]] && scp -q ~/.claude.json radish:~/.claude.json
+    echo "Claude config synced to radish"
+}
+
+# Claude session on radish
+# Usage: cc <repo>          → single session
+#        cc -n 5 <repo>     → 5 sessions in tmux
+# Repo defaults to cyclingwithelephants/ prefix
+cc() {
+    local count=1 repo=""
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -n) count="$2"; shift 2 ;;
+            *)  repo="$1"; shift ;;
+        esac
+    done
+    if (( count < 1 || count > 10 )); then
+        echo "count must be 1-10"; return 1
+    fi
+    [[ -n "$repo" && "$repo" != */* ]] && repo="cyclingwithelephants/$repo"
+    local dir="code/github.com/$repo"
+
+    # Ensure repo exists (clone if missing, skip fetch — worktree handles it)
+    ssh radish "cd ~/code/github.com/$repo 2>/dev/null && git rev-parse --git-dir >/dev/null 2>&1 || { mkdir -p ~/code/github.com/$repo && git clone https://github.com/$repo.git ~/code/github.com/$repo; }"
+
+    if (( count == 1 )); then
+        ssh -t radish "cd ~/$dir && /opt/homebrew/bin/claude --dangerously-skip-permissions --worktree \$(date +%Y%m%d-%H%M%S)"
+    else
+        for i in $(seq 1 $count); do
+            local wt="cc-$(date +%H%M%S)-$i"
+            ssh radish "tmux new-session -d -s cc 2>/dev/null; tmux new-window -t cc \"cd ~/$dir && /opt/homebrew/bin/claude --dangerously-skip-permissions --worktree $wt\""
+        done
+        ssh -t radish "tmux attach -t cc"
+    fi
+}
+
 alias vim="nvim"
 
 #alias ls='ls --color=auto -hv'
