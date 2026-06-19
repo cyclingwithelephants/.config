@@ -31,3 +31,19 @@ zed/prompts/
 claude/*
 !claude/settings.json
 !claude/settings.local.json
+
+# Claude Code's project-local cwd marker created when run from ~/.config —
+# distinct from claude/ above and contains only runtime data.
+.claude/
+
+# oh-my-claudecode runtime state
+.omc/
+
+# sops age private key — committing this defeats the entire encryption story
+sops/
+
+# bitwarden secrets local session state
+bws/
+
+# cagent first-run marker
+cagent/

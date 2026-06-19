@@ -2,11 +2,27 @@ contexts:
 - name: argocd.adamland.xyz
   server: argocd.adamland.xyz
   user: argocd.adamland.xyz
-current-context: argocd.adamland.xyz
+- name: kubernetes
+  server: kubernetes
+  user: kubernetes
+- name: argocd-cli.adamland.xyz
+  server: argocd-cli.adamland.xyz
+  user: argocd-cli.adamland.xyz
+current-context: argocd-cli.adamland.xyz
 prompts-enabled: false
 servers:
-- grpc-web-root-path: ""
+- grpc-web: true
+  grpc-web-root-path: ""
   server: argocd.adamland.xyz
+- core: true
+  grpc-web-root-path: ""
+  server: kubernetes
+- grpc-web: true
+  grpc-web-root-path: ""
+  server: argocd-cli.adamland.xyz
 users:
-- auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJhZG1pbjpsb2dpbiIsImV4cCI6MTc2MDk1NTAwOCwibmJmIjoxNzYwODY4NjA4LCJpYXQiOjE3NjA4Njg2MDgsImp0aSI6IjUzNTUyOTU4LWJmNTgtNDM2OC04M2YxLTAyOGVlYTBhYTM2MyJ9.nbYxZanGU51JpU-pzUYVQOfmHEInKCr6uHXqhi2bhN4
+- auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJhZG1pbjpsb2dpbiIsImV4cCI6MTc3NjEyMzE1NCwibmJmIjoxNzc2MDM2NzU0LCJpYXQiOjE3NzYwMzY3NTQsImp0aSI6IjYxODVkZGU5LTZkYWEtNDZiYy05ZDM4LTNiM2IwYWNlMzU5NiJ9.LWmgV8bs9RE5AjY5kO_WwnFAt91LkbsKzzdNqizMwX0
   name: argocd.adamland.xyz
+- name: kubernetes
+- auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJhZG1pbjpsb2dpbiIsImV4cCI6MTc3ODE5Nzk4NSwibmJmIjoxNzc3NTkzMTg1LCJpYXQiOjE3Nzc1OTMxODUsImp0aSI6ImFmN2E3OWE0LTc3YjQtNGFkNy1hYmY3LTU3NWM4N2FjNjk1NSJ9.1A7J1eHimYb05Z-c2Oh0y7p8iUlYI5221xR0shFGkSM
+  name: argocd-cli.adamland.xyz

@@ -1,5 +1,6 @@
 # ── Brews ──────────────────────────────────────────────────────────────────
 
+brew "anthropics/tap/ant"
 brew "argocd"
 brew "bat"
 brew "btop"

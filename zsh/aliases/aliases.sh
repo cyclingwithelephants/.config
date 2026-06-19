@@ -63,15 +63,22 @@ cc() {
     # Ensure repo exists (clone if missing, skip fetch — worktree handles it)
     ssh radish "cd ~/code/github.com/$repo 2>/dev/null && git rev-parse --git-dir >/dev/null 2>&1 || { mkdir -p ~/code/github.com/$repo && git clone https://github.com/$repo.git ~/code/github.com/$repo; }"
 
-    if (( count == 1 )); then
-        ssh -t radish "cd ~/$dir && /opt/homebrew/bin/claude --dangerously-skip-permissions --worktree \$(date +%Y%m%d-%H%M%S)"
-    else
-        for i in $(seq 1 $count); do
-            local wt="cc-$(date +%H%M%S)-$i"
-            ssh radish "tmux new-session -d -s cc 2>/dev/null; tmux new-window -t cc \"cd ~/$dir && /opt/homebrew/bin/claude --dangerously-skip-permissions --worktree $wt\""
-        done
-        ssh -t radish "tmux attach -t cc"
-    fi
+    local repo_short="${repo##*/}"
+
+    # Ensure tmux session exists; create with btop in first window if new
+    # remain-on-exit keeps the pane alive if btop isn't installed yet
+    ssh radish "tmux has-session -t cc 2>/dev/null || { tmux new-session -d -s cc -n btop; tmux set-option -t cc:btop remain-on-exit on; tmux send-keys -t cc:btop btop Enter; }"
+
+    # Count existing windows for this repo to avoid name collisions
+    local existing=$(ssh radish "tmux list-windows -t cc -F '#W' 2>/dev/null | grep -c '^${repo_short}-'")
+
+    for i in $(seq 1 $count); do
+        local n=$(( existing + i ))
+        local wt="cc-$(date +%H%M%S)-$i"
+        local win_name="${repo_short}-${n}"
+        ssh radish "tmux new-window -t cc -n '$win_name' \"cd ~/$dir && /opt/homebrew/bin/claude --dangerously-skip-permissions --worktree $wt\""
+    done
+    ssh -t radish "tmux attach -t cc"
 }
 
 alias vim="nvim"
