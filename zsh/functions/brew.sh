@@ -1,155 +1,163 @@
-# This code is used so that I can transparently use `brew install XYZ`
-# and this script will keep the Brewfile automatically up to date
+# Transparent `brew install/uninstall` wrapper for the nix-darwin world.
+#
+# Source of truth is ~/.config/homebrew/Brewfile.${hostname}. nix-darwin's
+# homebrew module (cleanup="zap") makes that file authoritative: anything
+# not declared gets uninstalled on the next switch.
+#
+# So `brew install foo`:
+#   1. inserts `brew "foo"` into the Brewfile in sorted order
+#   2. runs `sudo darwin-rebuild switch` — that's what actually installs
+#   3. commits + pushes the Brewfile change to ~/.config
+#
+# `brew uninstall foo` is the same with the line removed; the zap on next
+# switch removes the package itself. We never call `command brew install`
+# directly — that path is reserved for ad-hoc inspection commands only.
 
 brewfile_path() {
 	if [[ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ]]; then
 		echo "HOMEBREW_BUNDLE_FILE_GLOBAL is not set." >&2
 		return 1
 	fi
-
 	echo "${HOMEBREW_BUNDLE_FILE_GLOBAL}"
 }
 
-# Function to handle brew install and update the Brewfile
 brew_install_with_brewfile() {
-	IS_CASK=0
-	FORMULA=""
-	local brewfile
-
+	local is_cask=0 formula="" brewfile
 	brewfile="$(brewfile_path)" || return 1
 
-	# Parse arguments to handle "--cask" regardless of position
 	for arg in "$@"; do
 		if [[ "$arg" == "--cask" ]]; then
-			IS_CASK=1
+			is_cask=1
 		else
-			FORMULA="$arg"
+			formula="$arg"
 		fi
 	done
 
-	if [[ -z "$FORMULA" ]]; then
-		echo "Usage: brew install [--cask] <formula|cask>"
+	if [[ -z "$formula" ]]; then
+		echo "Usage: brew install [--cask] <formula|cask>" >&2
 		return 1
 	fi
 
-	# Ensure the Brewfile exists
 	if [[ ! -f "$brewfile" ]]; then
 		mkdir -p "$(dirname "$brewfile")"
 		touch "$brewfile"
 	fi
 
-	# Ensure the formula gets installed as either a formula or cask correctly
-	if [[ $IS_CASK -eq 1 ]]; then
-		# Install as cask
-		if command brew install --cask "$FORMULA"; then
-			add_to_brewfile "$FORMULA" "cask"
-		else
-			echo "Failed to install \"$FORMULA\"."
-			return 1
-		fi
-	else
-		# Install as formula
-		if command brew install "$FORMULA"; then
-			add_to_brewfile "$FORMULA" "brew"
-		else
-			echo "Failed to install \"$FORMULA\"."
-			return 1
-		fi
-	fi
+	local entry_type="brew"
+	[[ $is_cask -eq 1 ]] && entry_type="cask"
+
+	add_to_brewfile "$formula" "$entry_type" \
+		&& _darwin_switch_and_commit "install ${entry_type} ${formula}"
 }
 
-# Helper function to add entries to the Brewfile
-add_to_brewfile() {
-	ENTRY_TYPE="$2"
-	FORMULA="$1"
-	ENTRY="$ENTRY_TYPE \"$FORMULA\""
-	local brewfile
-
-	brewfile="$(brewfile_path)" || return 1
-
-	# Check if the entry already exists
-	if grep -qE "^$ENTRY$" "$brewfile"; then
-		echo "$ENTRY is already in the Brewfile."
-	else
-		TMPFILE=$(mktemp)
-		awk -v entry="$ENTRY" -v type="$ENTRY_TYPE" '
-      BEGIN { placed = 0 }
-      /^brew "/ && type == "brew" {
-        if (!placed && $0 > entry) {
-          print entry
-          placed = 1
-        }
-      }
-      /^cask "/ && type == "cask" {
-        if (!placed && $0 > entry) {
-          print entry
-          placed = 1
-        }
-      }
-      { print $0 }
-      END {
-        if (!placed) print entry
-      }
-    ' "$brewfile" >"$TMPFILE"
-		mv "$TMPFILE" "$brewfile"
-		echo "Added \"$FORMULA\" to the Brewfile as $ENTRY."
-	fi
-}
-
-# Function to handle brew uninstall and update the Brewfile
 brew_uninstall_with_brewfile() {
-	IS_CASK=0
-	FORMULA=""
-	local brewfile
-
+	local is_cask=0 formula="" brewfile
 	brewfile="$(brewfile_path)" || return 1
 
-	# Parse arguments to handle "--cask" regardless of position
 	for arg in "$@"; do
 		if [[ "$arg" == "--cask" ]]; then
-			IS_CASK=1
+			is_cask=1
 		else
-			FORMULA="$arg"
+			formula="$arg"
 		fi
 	done
 
-	if [[ -z "$FORMULA" ]]; then
-		echo "Usage: brew uninstall [--cask] <formula|cask>"
+	if [[ -z "$formula" ]]; then
+		echo "Usage: brew uninstall [--cask] <formula|cask>" >&2
 		return 1
 	fi
 
-	# Ensure the Brewfile exists
 	if [[ ! -f "$brewfile" ]]; then
-		echo "No Brewfile found at $brewfile."
+		echo "No Brewfile found at $brewfile." >&2
 		return 1
 	fi
 
-	# Uninstall the formula or cask (pass --cask only if required)
-	# Don't abort on failure — the package may already be uninstalled,
-	# but we still want to clean it from the Brewfile
-	if [[ $IS_CASK -eq 1 ]]; then
-		command brew uninstall --cask "$FORMULA" 2>/dev/null ||
-			echo "Note: \"$FORMULA\" was not installed (already removed?)."
-		ENTRY="cask \"$FORMULA\""
-	else
-		command brew uninstall "$FORMULA" 2>/dev/null ||
-			echo "Note: \"$FORMULA\" was not installed (already removed?)."
-		ENTRY="brew \"$FORMULA\""
+	local entry_type="brew"
+	[[ $is_cask -eq 1 ]] && entry_type="cask"
+
+	remove_from_brewfile "$formula" "$entry_type" \
+		&& _darwin_switch_and_commit "uninstall ${entry_type} ${formula}"
+}
+
+# Helper: insert `brew "name"` or `cask "name"` into the Brewfile in sorted
+# order. Awk walks lines of the same type and drops the new entry at the
+# first line that sorts after it. End-of-file fallback if it sorts last.
+add_to_brewfile() {
+	local formula="$1" entry_type="$2"
+	local entry="${entry_type} \"${formula}\""
+	local brewfile tmpfile
+	brewfile="$(brewfile_path)" || return 1
+
+	if grep -qE "^${entry}$" "$brewfile"; then
+		echo "${entry} already declared."
+		return 1
 	fi
 
-	# Check if the entry exists in the Brewfile and remove it
-	# If --cask wasn't specified, also check for a cask entry (and vice versa),
-	# since brew uninstall works without --cask but the Brewfile may list it as a cask
-	if grep -qE "^$ENTRY$" "$brewfile"; then
-		sed -i.bak "/^$ENTRY$/d" "$brewfile" && rm -f "$brewfile.bak"
-		echo "Removed \"$FORMULA\" from the Brewfile."
-	elif [[ $IS_CASK -eq 0 ]] && grep -qE "^cask \"$FORMULA\"$" "$brewfile"; then
-		sed -i.bak "/^cask \"$FORMULA\"$/d" "$brewfile" && rm -f "$brewfile.bak"
-		echo "Removed \"$FORMULA\" from the Brewfile (was listed as cask)."
-	elif [[ $IS_CASK -eq 1 ]] && grep -qE "^brew \"$FORMULA\"$" "$brewfile"; then
-		sed -i.bak "/^brew \"$FORMULA\"$/d" "$brewfile" && rm -f "$brewfile.bak"
-		echo "Removed \"$FORMULA\" from the Brewfile (was listed as brew)."
-	else
-		echo "\"$FORMULA\" was not found in the Brewfile."
+	tmpfile=$(mktemp)
+	awk -v entry="$entry" -v type="$entry_type" '
+		BEGIN { placed = 0 }
+		/^brew "/ && type == "brew" {
+			if (!placed && $0 > entry) { print entry; placed = 1 }
+		}
+		/^cask "/ && type == "cask" {
+			if (!placed && $0 > entry) { print entry; placed = 1 }
+		}
+		{ print $0 }
+		END { if (!placed) print entry }
+	' "$brewfile" >"$tmpfile"
+	mv "$tmpfile" "$brewfile"
+	echo "Added ${entry} to Brewfile."
+}
+
+# Helper: remove a line from the Brewfile. Tolerates the cask/brew swap
+# the user can make from the CLI (`brew uninstall foo` works whether foo
+# is a formula or a cask), so check both line shapes before giving up.
+remove_from_brewfile() {
+	local formula="$1" entry_type="$2"
+	local entry="${entry_type} \"${formula}\""
+	local brewfile
+	brewfile="$(brewfile_path)" || return 1
+
+	if grep -qE "^${entry}$" "$brewfile"; then
+		sed -i.bak "/^${entry}\$/d" "$brewfile" && rm -f "${brewfile}.bak"
+		echo "Removed ${entry} from Brewfile."
+		return 0
 	fi
+
+	local alt_type
+	[[ "$entry_type" == "brew" ]] && alt_type="cask" || alt_type="brew"
+	local alt_entry="${alt_type} \"${formula}\""
+
+	if grep -qE "^${alt_entry}$" "$brewfile"; then
+		sed -i.bak "/^${alt_entry}\$/d" "$brewfile" && rm -f "${brewfile}.bak"
+		echo "Removed ${alt_entry} from Brewfile (was declared as ${alt_type})."
+		return 0
+	fi
+
+	echo "${formula} not found in Brewfile."
+	return 1
+}
+
+# Run the rebuild, then commit + push the Brewfile delta. Hard-fails the
+# whole command if anything along the way fails — including push, which is
+# how we'll later wire alerting (task #9). Rolls back the local Brewfile
+# edit on rebuild failure so a broken switch doesn't leave a phantom line.
+_darwin_switch_and_commit() {
+	local message="$1" brewfile
+	brewfile="$(brewfile_path)" || return 1
+
+	# Absolute path: sudo's PATH won't include /run/current-system/sw/bin
+	# unless secure_path is overridden, and we don't want to require that.
+	if ! sudo /run/current-system/sw/bin/darwin-rebuild switch --flake "${HOME}/.config/darwin#${HOST}"; then
+		echo "darwin-rebuild failed; rolling back ${brewfile}" >&2
+		git -C "${HOME}/.config" checkout -- "$brewfile"
+		return 1
+	fi
+
+	git -C "${HOME}/.config" add "$brewfile" || return 1
+	git -C "${HOME}/.config" commit -m "homebrew: ${message}" || return 1
+	git -C "${HOME}/.config" push || {
+		echo "git push failed; commit is local. Push manually when network returns." >&2
+		return 1
+	}
 }
