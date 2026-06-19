@@ -96,33 +96,32 @@ in
   # Set as a launchd user env so GUI apps inherit it, not just shells.
   launchd.user.envVariables.ELECTRON_NO_UPDATER = "1";
 
-  # Three small things live in activationScripts rather than typed
+  # /etc/zshenv: nix-darwin-managed tiny stub that just sources the real
+  # zshenv in ~/.config. Going through environment.etc means nix-darwin
+  # owns the file (so its pre-activation `/etc` audit recognises it) and
+  # the actual config stays a live, hand-edited dotfile — no
+  # `darwin-rebuild switch` needed when you tweak it.
+  environment.etc."zshenv".text = ''
+    source /Users/adam/.config/zsh/.zshenv
+  '';
+
+  # Two small things live in activationScripts rather than typed
   # nix-darwin options. Each justified inline — the principle is "typed
   # option first, escape hatch only when the typed option would lie".
   #
-  #   1. /etc/zshenv → live symlink into ~/.config. `environment.etc.source`
-  #      would snapshot the file into the nix store; edits to .zshenv
-  #      wouldn't take effect until the next `darwin-rebuild switch`.
-  #      That defeats the point of having dotfiles in a git repo you
-  #      iterate on. So a live symlink, declared in nix.
-  #
-  #   2. ~/.claude → ~/.config/claude. Claude Code hardcodes ~/.claude.
+  #   1. ~/.claude → ~/.config/claude. Claude Code hardcodes ~/.claude.
   #      Target is in $HOME, not /etc — environment.etc doesn't apply.
   #      home-manager would model this; we declined home-manager scope.
   #      Bail-out branches preserve a real ~/.claude dir for manual
   #      merge instead of silently clobbering it.
   #
-  #   3. Rosetta 2. nix-darwin has no typed option. `softwareupdate
+  #   2. Rosetta 2. nix-darwin has no typed option. `softwareupdate
   #      --install-rosetta` is itself idempotent so re-running on every
   #      switch is cheap (no-op once installed).
   system.activationScripts.postActivation.text = ''
     set -eu
 
-    # 1. /etc/zshenv live symlink
-    /bin/rm -f /etc/zshenv
-    /bin/ln -s /Users/adam/.config/zsh/.zshenv /etc/zshenv
-
-    # 2. ~/.claude → ~/.config/claude
+    # 1. ~/.claude → ~/.config/claude
     home_claude="/Users/adam/.claude"
     xdg_claude="/Users/adam/.config/claude"
     mkdir -p "$xdg_claude"
@@ -136,7 +135,7 @@ in
       ln -s "$xdg_claude" "$home_claude"
     fi
 
-    # 3. Rosetta 2 (arm64 only). `pgrep oahd` is the fast check Apple's
+    # 2. Rosetta 2 (arm64 only). `pgrep oahd` is the fast check Apple's
     # own scripts use — the alternative (`softwareupdate --install-rosetta`
     # always) re-queries Apple's update servers even when Rosetta is
     # already installed, adding seconds to every darwin-rebuild switch.
