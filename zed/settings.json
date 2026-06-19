@@ -7,13 +7,26 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "disable_ai": true,
+  "project_panel": {
+    "dock": "right"
+  },
+  "outline_panel": {
+    "dock": "right"
+  },
+  "collaboration_panel": {
+    "dock": "right"
+  },
+  "git_panel": {
+    "dock": "right"
+  },
+  "disable_ai": false,
   "agent_servers": {
     "claude-acp": {
       "type": "registry",
     },
   },
   "agent": {
+    "dock": "left",
     "default_model": {
       "provider": "ollama",
       "model": "qwen3:30b",
@@ -72,22 +85,6 @@
   "language_models": {
     "openai_compatible": {
       // Using Together AI as an example
-      "chat.adamland.xyz": {
-        "api_url": "https://chat.adamland.xyz",
-        "available_models": [
-          {
-            "name": "qwen3-30b-moe-thinking",
-            "display_name": "qwen3-30b-moe-thinking",
-            "max_tokens": 32768,
-            "capabilities": {
-              "tools": true,
-              "images": false,
-              "parallel_tool_calls": false,
-              "prompt_cache_key": false,
-            },
-          },
-        ],
       },
-    },
   },
 }

@@ -1,0 +1,4 @@
+LastCheck: "2026-04-28T23:22:49.33038+01:00"
+LatestRelease:
+  URL: sigs.k8s.io/cluster-api
+  Version: 1.13.1

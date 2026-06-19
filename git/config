@@ -30,3 +30,5 @@
 # include machine specific gitconfig if it exists (used for work)
 [includeIf "gitdir:~/.gitconfig"]
     path = ~/.gitconfig
+[init]
+	defaultBranch = main
