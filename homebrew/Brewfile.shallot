@@ -47,7 +47,6 @@ brew "govc"
 brew "grpcurl"
 brew "guile"
 brew "hashicorp/tap/packer"
-brew "hashicorp/tap/terraform"     # core disabled terraform after the BSL relicense
 brew "hcloud"
 brew "helm"
 brew "imagemagick"
