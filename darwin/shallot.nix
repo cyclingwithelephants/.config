@@ -189,8 +189,12 @@ in
     enable = true;
     onActivation = {
       cleanup = "zap";
-      autoUpdate = false;
-      upgrade = false;
+      # Every switch also refreshes brew's index and upgrades everything.
+      # Deliberate trade: never falling behind beats fast, predictable
+      # switches. Self-updating casks (auto_updates) are still skipped
+      # since greedy upgrades aren't enabled.
+      autoUpdate = true;
+      upgrade = true;
     };
     brews = parseBrewfile brewfile "brew";
     casks = parseBrewfile brewfile "cask";
