@@ -42,6 +42,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus",
   "hooks": {
     "PostToolUse": [
       {
@@ -63,15 +64,6 @@
       }
     ],
     "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "rtk hook claude"
-          }
-        ]
-      },
       {
         "hooks": [
           {
@@ -173,10 +165,11 @@
       }
     }
   },
-  "effortLevel": "xhigh",
+  "effortLevel": "medium",
+  "advisorModel": "opus",
   "autoUpdatesChannel": "stable",
   "voice": {
-    "enabled": true,
+    "enabled": false,
     "mode": "hold"
   },
   "skipDangerousModePermissionPrompt": true,
@@ -184,6 +177,6 @@
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true,
+  "voiceEnabled": false,
   "defaultView": "chat"
 }

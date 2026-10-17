@@ -57,3 +57,6 @@ zsh/.zcompdump*
 
 # brew trust store: brew bundle rewrites it from the Brewfile on every switch
 homebrew/trust.json*
+
+# clusterctl update-check cache, rewritten on every run
+cluster-api/version.yaml
