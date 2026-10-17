@@ -23,6 +23,14 @@ in
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # Weekly store GC + dedupe. Without these the store grew to 34G with 14
+  # system generations nothing ever pruned. 30d keeps a month of rollbacks.
+  nix.gc = {
+    automatic = true;
+    options = "--delete-older-than 30d";
+  };
+  nix.optimise.automatic = true;
+
   # ── Sudo: passwordless + Touch ID ────────────────────────────────────────
   environment.etc."sudoers.d/adam-nopasswd".text = ''
     adam ALL=(ALL) NOPASSWD: ALL
@@ -141,6 +149,24 @@ in
     # already installed, adding seconds to every darwin-rebuild switch.
     if [ "$(uname -m)" = "arm64" ] && ! /usr/bin/pgrep -q oahd; then
       softwareupdate --install-rosetta --agree-to-license || true
+    fi
+  '';
+
+  # ~/.homebrew → ~/.config/homebrew. Brew ≥7 refuses untrusted taps and
+  # keeps its trust store in $XDG_CONFIG_HOME/homebrew, falling back to
+  # ~/.homebrew when XDG is unset — which it is under the sudo'd `brew
+  # bundle` that activation runs. Two stores drifted apart and the switch
+  # died on "untrusted tap hashicorp/tap". Symlinking makes them one file.
+  # preActivation, not post: it must exist before the homebrew step runs.
+  system.activationScripts.preActivation.text = ''
+    home_brew="/Users/adam/.homebrew"
+    xdg_brew="/Users/adam/.config/homebrew"
+    if [ -L "$home_brew" ]; then
+      :
+    elif [ -e "$home_brew" ]; then
+      echo "warning: $home_brew is a real path, not a symlink; merge it into $xdg_brew" >&2
+    else
+      sudo -u adam ln -s "$xdg_brew" "$home_brew"
     fi
   '';
 

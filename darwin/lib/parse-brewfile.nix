@@ -29,5 +29,12 @@ let
       );
     in
     builtins.substring 0 closingQuote afterPrefix;
+  # `restart_service: true` is the one Brewfile option we use (tailscale);
+  # nix-darwin only applies it when the entry is an attrset, not a string.
+  toEntry = l:
+    let name = stripQuotes l; in
+    if lib.hasInfix "restart_service: true" l
+    then { inherit name; restart_service = true; }
+    else name;
 in
-map stripQuotes matching
+map toEntry matching

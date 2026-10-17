@@ -47,3 +47,13 @@ bws/
 
 # cagent first-run marker
 cagent/
+
+# nix build output symlink + manual lockfile backups
+darwin/result
+darwin/flake.lock.bak*
+
+# zsh completion cache
+zsh/.zcompdump*
+
+# brew trust store: brew bundle rewrites it from the Brewfile on every switch
+homebrew/trust.json*
